@@ -1,0 +1,15 @@
+# Signing material — never commit private keys or certs
+Scripts/certs/
+*.p12
+*.pem
+*.cer
+
+# Signed output
+*.pkpass
+
+# Xcode
+DerivedData/
+build/
+*.xcuserstate
+xcuserdata/
+.DS_Store

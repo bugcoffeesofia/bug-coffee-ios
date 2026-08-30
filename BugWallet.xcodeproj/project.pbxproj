@@ -1,0 +1,1167 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		00E724A02B1B88E05E0CC78A /* PkPassZip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C101EA94CD6EC089F5B733B /* PkPassZip.swift */; };
+		0A0D9D13A0B18A2156BBE450 /* StampWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = E658155F801D81941D6FC912 /* StampWidget.swift */; };
+		0A2B017CA717DF8193001F3A /* FirebaseAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62DB7B6432C91390C15C64A9 /* FirebaseAuth.swift */; };
+		0BDCF309F3300AA55168F000 /* BlendFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D839C27D7C3FF90359475A /* BlendFinder.swift */; };
+		0F404541428D1D2424BA3EB4 /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0E61ABD15966188F3F4A7304 /* icon@2x.png */; };
+		1391AC2F80D69CC88E841C3E /* passkey.pem in Resources */ = {isa = PBXBuildFile; fileRef = 56A062F2BBE21D616D777E22 /* passkey.pem */; };
+		153C853C0B60BBB6706D8888 /* StampCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4947CF5B1AE6A7A2DE250A34 /* StampCard.swift */; };
+		16342726CBC183F1AB7C14AE /* StampCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4947CF5B1AE6A7A2DE250A34 /* StampCard.swift */; };
+		166D8694FEA95DE66689E7EC /* BeanLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5976FF73B4AF8FCA42E971C /* BeanLink.swift */; };
+		1CB769E076272490785847A5 /* BugWalletApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06836A41C06DC96A53F936D9 /* BugWalletApp.swift */; };
+		1EFB8FD1A84C38BB0DD7797F /* WatchBlendView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A439008AB726057D25F3FFD7 /* WatchBlendView.swift */; };
+		1FBF9E614E415DA04E997A23 /* BeanLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5976FF73B4AF8FCA42E971C /* BeanLink.swift */; };
+		22665A3ECAD5A1A9BF8EF227 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2A27D1211AB50781A54DAB2F /* Assets.xcassets */; };
+		2B718480CF2E6DB0ACF2AD00 /* GroupOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82216EE3AED57AEE636A85CA /* GroupOrder.swift */; };
+		2FB08D1812AC4C1403E9939C /* SharedKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1490232CD3D932313A03A078 /* SharedKeys.swift */; };
+		33F9769E29919217C6CB5999 /* BeanLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5976FF73B4AF8FCA42E971C /* BeanLink.swift */; };
+		37C9486FB25D68D51FB2928F /* OrderCardRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F4336B855979BA83A67315F /* OrderCardRenderer.swift */; };
+		3D18F703CA7352B65217C1D8 /* BugWalletWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 421D8793DCB145DCCB339F83 /* BugWalletWatch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		3F0CA2E08B42682BC3F4CE02 /* OrderStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6C925B526E275D16FD8C48 /* OrderStore.swift */; };
+		3FF8191D81E9E1C85C58B2DE /* PassSigner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C83582CEB0AC77652B5FCD /* PassSigner.swift */; };
+		421E303F95A354985886205A /* BlendFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D839C27D7C3FF90359475A /* BlendFinder.swift */; };
+		445BD0149D1499A060CD3831 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = A05CAC9D41A4DFF8F8B29CED /* icon.png */; };
+		4CD97884A82E607F892944F8 /* BugWalletStampWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 7DE814797379D4270A85F193 /* BugWalletStampWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		52EF9D352BAF949FEB915DBF /* HealthLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69C07FE6B940E81BBB83F6B /* HealthLogger.swift */; };
+		552530170554760588A58561 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4AA999A36147C7DE8E5BF21F /* Assets.xcassets */; };
+		588FA7FCDE85E9D07BE6C96A /* Zip.swift in Sources */ = {isa = PBXBuildFile; fileRef = CABF77E9C7D18D20D0B624B3 /* Zip.swift */; };
+		5DE65C413D47A171B2E0B829 /* icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = A173A220035DD353E8C16CE1 /* icon@3x.png */; };
+		61D429D1E0AA72299D995C4E /* passcert.pem in Resources */ = {isa = PBXBuildFile; fileRef = BF23FF5ABB3858923F058305 /* passcert.pem */; };
+		6621F28A14FAFA2798095616 /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0FEBB74914D5B11C74025ACA /* logo@2x.png */; };
+		67EE2A877D6BEDCD7B709C8B /* BlendFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D839C27D7C3FF90359475A /* BlendFinder.swift */; };
+		6E1F80BF69FEA8A2B98FCE4A /* BlendData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2886C48D4C0E2624A976710 /* BlendData.swift */; };
+		770762B03C6822401173F8C7 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFD58AF7862C633DBF356F6E /* MessagesViewController.swift */; };
+		78A7DFC93302D6C60394CE6B /* PassBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29AE81A56E0A913902F3BB67 /* PassBuilder.swift */; };
+		7B4FFEB4ECCFE6FA9D15DF6B /* SharedKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1490232CD3D932313A03A078 /* SharedKeys.swift */; };
+		7B5A9C8AD6EE93E96A194C2F /* LocalPassScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E03CEBDA76D893951D0971C3 /* LocalPassScanner.swift */; };
+		833AD155175017E51430ED48 /* WatchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B1BF206B6F7F01C93BE474D /* WatchModel.swift */; };
+		956BFC34FB1FC7A4F8EC0E0A /* CoffeeMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA8406AA02A4A68FD41C4D3 /* CoffeeMenu.swift */; };
+		A2682E227A2471DAFBB76796 /* ImageDecode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326D9EDA26E3A8C5CE36B977 /* ImageDecode.swift */; };
+		A88EF29CFED0ECECFBAC46F9 /* BugWalletWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D97D480696651C14EEC02B30 /* BugWalletWatchApp.swift */; };
+		AB68DF8D5C554F396F8059C5 /* CoffeeMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA8406AA02A4A68FD41C4D3 /* CoffeeMenu.swift */; };
+		AC8621F5B75849696EEA4116 /* CoffeeMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA8406AA02A4A68FD41C4D3 /* CoffeeMenu.swift */; };
+		B26B3E49FC4AA5A47CD2E9D9 /* ImageDecode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326D9EDA26E3A8C5CE36B977 /* ImageDecode.swift */; };
+		B464E483610F339EB1009F52 /* BugWalletMessages.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 44404CF152F7005FB5324B3F /* BugWalletMessages.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		B49A6BD7007891A1DD076F7D /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C223AFFA87AC9812C4BD86 /* CardView.swift */; };
+		B55856637FF62E2B0328858D /* WatchSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA9C81F98701751ADB22DF6F /* WatchSync.swift */; };
+		B7349428D1EBD26D12689936 /* WatchLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906794A5BF422E93D35AF0BB /* WatchLogView.swift */; };
+		B85D586B9B0E615F72A447DE /* StampCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4947CF5B1AE6A7A2DE250A34 /* StampCard.swift */; };
+		B98BE250A659A230001B8F71 /* CoffeeMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA8406AA02A4A68FD41C4D3 /* CoffeeMenu.swift */; };
+		BCF538831E16D1D57B218993 /* BlendData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2886C48D4C0E2624A976710 /* BlendData.swift */; };
+		BD274305AC2B34083D7CFEDB /* _CryptoExtras in Frameworks */ = {isa = PBXBuildFile; productRef = CFAFC9213695D0D43F7F8C63 /* _CryptoExtras */; };
+		BE252651646F7700881000D4 /* WatchStampsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215FADADA57990B09B8654D3 /* WatchStampsView.swift */; };
+		C398ED26AA22EE7CC042CFB1 /* HealthLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69C07FE6B940E81BBB83F6B /* HealthLogger.swift */; };
+		C3F135414F9A95DA8CD9B2F2 /* BlendData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2886C48D4C0E2624A976710 /* BlendData.swift */; };
+		C9CC30D0AFF0E2E264B995DA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 89AAEB7BC336B40CE69167A9 /* Assets.xcassets */; };
+		CBFAA4935D4E4117EF160C57 /* X509 in Frameworks */ = {isa = PBXBuildFile; productRef = AF217218ADDE899BEE179388 /* X509 */; };
+		D069F83017F95DB5A0B13B72 /* ImageDecode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326D9EDA26E3A8C5CE36B977 /* ImageDecode.swift */; };
+		D1DF1E31F8F729AB3FDD6E50 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6553D0058FC448F6FAEBA05A /* LoginView.swift */; };
+		D2AACB23A3BD23C838E6EDB9 /* ProductsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F403E0E68746CF530C0FB5 /* ProductsView.swift */; };
+		DB2E6D43771EA0D8689B50B0 /* StampCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4947CF5B1AE6A7A2DE250A34 /* StampCard.swift */; };
+		DB799C47D00D6971DBA9A6DB /* SharedKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1490232CD3D932313A03A078 /* SharedKeys.swift */; };
+		DD9DCDCA2AE037D851DCAF0E /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 62EE2C940E45E57F929F95BB /* logo.png */; };
+		E5F30D41496B4D69C3AD862C /* BlendData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2886C48D4C0E2624A976710 /* BlendData.swift */; };
+		E82B1F3EF9D6EB3AE20F3EAD /* wwdr.pem in Resources */ = {isa = PBXBuildFile; fileRef = 7826C0EB18B0D98DBD16D3B6 /* wwdr.pem */; };
+		F13B2229068643E4C6966B53 /* OrderViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0462AC5293C299B58AC985AF /* OrderViews.swift */; };
+		F2C1462D09C53EFBAF067BF5 /* ImageDecode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326D9EDA26E3A8C5CE36B977 /* ImageDecode.swift */; };
+		FAF41A2F1F6CF6DB20760103 /* QRGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28646CAABF7DA62BF7AD38C /* QRGenerator.swift */; };
+		FE7333C8C360C3663F7BFED9 /* SharedKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1490232CD3D932313A03A078 /* SharedKeys.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		06543FD54BD7FE5FD7E3E159 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5661872B688D83F7173483F2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A79EC43BC3E53ADF75D9F638;
+			remoteInfo = BugWalletStampWidget;
+		};
+		177B998E4D42663D1A34A1D6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5661872B688D83F7173483F2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C9682025759BDE8BE4FFD980;
+			remoteInfo = BugWalletWatch;
+		};
+		62FF63D5AD89B7F369380DD5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5661872B688D83F7173483F2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9B80C8A2842B080A6FD43D54;
+			remoteInfo = BugWalletMessages;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		259B0C5591C06D5EB1849517 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				3D18F703CA7352B65217C1D8 /* BugWalletWatch.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1FA878D4F13C11580588896 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				B464E483610F339EB1009F52 /* BugWalletMessages.appex in Embed Foundation Extensions */,
+				4CD97884A82E607F892944F8 /* BugWalletStampWidget.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		0462AC5293C299B58AC985AF /* OrderViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderViews.swift; sourceTree = "<group>"; };
+		06836A41C06DC96A53F936D9 /* BugWalletApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BugWalletApp.swift; sourceTree = "<group>"; };
+		0D5BA412D4F7A5D40A264589 /* LocalPassCreation.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = LocalPassCreation.xcconfig; sourceTree = "<group>"; };
+		0E61ABD15966188F3F4A7304 /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
+		0FEBB74914D5B11C74025ACA /* logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo@2x.png"; sourceTree = "<group>"; };
+		1490232CD3D932313A03A078 /* SharedKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedKeys.swift; sourceTree = "<group>"; };
+		215FADADA57990B09B8654D3 /* WatchStampsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchStampsView.swift; sourceTree = "<group>"; };
+		29AE81A56E0A913902F3BB67 /* PassBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassBuilder.swift; sourceTree = "<group>"; };
+		2A27D1211AB50781A54DAB2F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2F4336B855979BA83A67315F /* OrderCardRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCardRenderer.swift; sourceTree = "<group>"; };
+		326D9EDA26E3A8C5CE36B977 /* ImageDecode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDecode.swift; sourceTree = "<group>"; };
+		3C18A0E193643D07B6580764 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		40D839C27D7C3FF90359475A /* BlendFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlendFinder.swift; sourceTree = "<group>"; };
+		421D8793DCB145DCCB339F83 /* BugWalletWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BugWalletWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		44404CF152F7005FB5324B3F /* BugWalletMessages.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = BugWalletMessages.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		44F403E0E68746CF530C0FB5 /* ProductsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsView.swift; sourceTree = "<group>"; };
+		4947CF5B1AE6A7A2DE250A34 /* StampCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StampCard.swift; sourceTree = "<group>"; };
+		49C223AFFA87AC9812C4BD86 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		4AA999A36147C7DE8E5BF21F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4BCB77F8FA84FB05D437D091 /* BugWallet.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BugWallet.entitlements; sourceTree = "<group>"; };
+		4D6C925B526E275D16FD8C48 /* OrderStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderStore.swift; sourceTree = "<group>"; };
+		56A062F2BBE21D616D777E22 /* passkey.pem */ = {isa = PBXFileReference; path = passkey.pem; sourceTree = "<group>"; };
+		62DB7B6432C91390C15C64A9 /* FirebaseAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseAuth.swift; sourceTree = "<group>"; };
+		62EE2C940E45E57F929F95BB /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
+		6553D0058FC448F6FAEBA05A /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		7826C0EB18B0D98DBD16D3B6 /* wwdr.pem */ = {isa = PBXFileReference; path = wwdr.pem; sourceTree = "<group>"; };
+		7C101EA94CD6EC089F5B733B /* PkPassZip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PkPassZip.swift; sourceTree = "<group>"; };
+		7DE814797379D4270A85F193 /* BugWalletStampWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = BugWalletStampWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		82216EE3AED57AEE636A85CA /* GroupOrder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupOrder.swift; sourceTree = "<group>"; };
+		89AAEB7BC336B40CE69167A9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		906794A5BF422E93D35AF0BB /* WatchLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchLogView.swift; sourceTree = "<group>"; };
+		9791953CFEE5A9CC745F0BBD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		9B1BF206B6F7F01C93BE474D /* WatchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchModel.swift; sourceTree = "<group>"; };
+		A05CAC9D41A4DFF8F8B29CED /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
+		A173A220035DD353E8C16CE1 /* icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@3x.png"; sourceTree = "<group>"; };
+		A2886C48D4C0E2624A976710 /* BlendData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlendData.swift; sourceTree = "<group>"; };
+		A439008AB726057D25F3FFD7 /* WatchBlendView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchBlendView.swift; sourceTree = "<group>"; };
+		B5976FF73B4AF8FCA42E971C /* BeanLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeanLink.swift; sourceTree = "<group>"; };
+		BA9C81F98701751ADB22DF6F /* WatchSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchSync.swift; sourceTree = "<group>"; };
+		BEA8406AA02A4A68FD41C4D3 /* CoffeeMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoffeeMenu.swift; sourceTree = "<group>"; };
+		BF23FF5ABB3858923F058305 /* passcert.pem */ = {isa = PBXFileReference; path = passcert.pem; sourceTree = "<group>"; };
+		CABF77E9C7D18D20D0B624B3 /* Zip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Zip.swift; sourceTree = "<group>"; };
+		CC773418C49407A4095940FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		D69C07FE6B940E81BBB83F6B /* HealthLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthLogger.swift; sourceTree = "<group>"; };
+		D97D480696651C14EEC02B30 /* BugWalletWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BugWalletWatchApp.swift; sourceTree = "<group>"; };
+		E03CEBDA76D893951D0971C3 /* LocalPassScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalPassScanner.swift; sourceTree = "<group>"; };
+		E28646CAABF7DA62BF7AD38C /* QRGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRGenerator.swift; sourceTree = "<group>"; };
+		E658155F801D81941D6FC912 /* StampWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StampWidget.swift; sourceTree = "<group>"; };
+		E8C83582CEB0AC77652B5FCD /* PassSigner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassSigner.swift; sourceTree = "<group>"; };
+		EFD58AF7862C633DBF356F6E /* MessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesViewController.swift; sourceTree = "<group>"; };
+		F11F152D34764F1F65CEB053 /* BugWallet.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = BugWallet.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		343C9EBFABEC7226F373A525 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CBFAA4935D4E4117EF160C57 /* X509 in Frameworks */,
+				BD274305AC2B34083D7CFEDB /* _CryptoExtras in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		058BDE8FA369C2F214287A01 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				06836A41C06DC96A53F936D9 /* BugWalletApp.swift */,
+				49C223AFFA87AC9812C4BD86 /* CardView.swift */,
+				62DB7B6432C91390C15C64A9 /* FirebaseAuth.swift */,
+				D69C07FE6B940E81BBB83F6B /* HealthLogger.swift */,
+				E03CEBDA76D893951D0971C3 /* LocalPassScanner.swift */,
+				6553D0058FC448F6FAEBA05A /* LoginView.swift */,
+				29AE81A56E0A913902F3BB67 /* PassBuilder.swift */,
+				E8C83582CEB0AC77652B5FCD /* PassSigner.swift */,
+				7C101EA94CD6EC089F5B733B /* PkPassZip.swift */,
+				44F403E0E68746CF530C0FB5 /* ProductsView.swift */,
+				E28646CAABF7DA62BF7AD38C /* QRGenerator.swift */,
+				BA9C81F98701751ADB22DF6F /* WatchSync.swift */,
+				CABF77E9C7D18D20D0B624B3 /* Zip.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		071A967589ED5A730729B435 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				9791953CFEE5A9CC745F0BBD /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		0B4DA87BB5479CB47EBF1CBF /* BugWalletWatch */ = {
+			isa = PBXGroup;
+			children = (
+				AE486FD58227635EEB880A4C /* Resources */,
+				65C03BAFE9C19FAD3C4EB9BE /* Sources */,
+			);
+			path = BugWalletWatch;
+			sourceTree = "<group>";
+		};
+		1094A27715FC662FA0A46D65 /* Signing */ = {
+			isa = PBXGroup;
+			children = (
+				BF23FF5ABB3858923F058305 /* passcert.pem */,
+				56A062F2BBE21D616D777E22 /* passkey.pem */,
+				7826C0EB18B0D98DBD16D3B6 /* wwdr.pem */,
+			);
+			path = Signing;
+			sourceTree = "<group>";
+		};
+		123BC90071CFB3C731E68635 /* StampWidget */ = {
+			isa = PBXGroup;
+			children = (
+				071A967589ED5A730729B435 /* Resources */,
+				8F8F7057F78182AA62F42BFB /* Sources */,
+			);
+			path = StampWidget;
+			sourceTree = "<group>";
+		};
+		128039C6D2EB7946D7F941D7 = {
+			isa = PBXGroup;
+			children = (
+				F74A18823B17F776A1EDD266 /* BugWallet */,
+				0B4DA87BB5479CB47EBF1CBF /* BugWalletWatch */,
+				7D4DAE1EDED7F35DB76D074E /* Config */,
+				8A8231B3FAB0CDCEFCD157F4 /* MessagesExtension */,
+				785979F33F11C58028FAE0E5 /* PassTemplate */,
+				5ABB21D5845EAF49DCD67001 /* Shared */,
+				123BC90071CFB3C731E68635 /* StampWidget */,
+				7022C3F8E30E7DDD1706ABEC /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		27876BE7FA0169B05BB1C807 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				89AAEB7BC336B40CE69167A9 /* Assets.xcassets */,
+				4BCB77F8FA84FB05D437D091 /* BugWallet.entitlements */,
+				3C18A0E193643D07B6580764 /* Info.plist */,
+				1094A27715FC662FA0A46D65 /* Signing */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		5ABB21D5845EAF49DCD67001 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				B5976FF73B4AF8FCA42E971C /* BeanLink.swift */,
+				A2886C48D4C0E2624A976710 /* BlendData.swift */,
+				40D839C27D7C3FF90359475A /* BlendFinder.swift */,
+				BEA8406AA02A4A68FD41C4D3 /* CoffeeMenu.swift */,
+				326D9EDA26E3A8C5CE36B977 /* ImageDecode.swift */,
+				1490232CD3D932313A03A078 /* SharedKeys.swift */,
+				4947CF5B1AE6A7A2DE250A34 /* StampCard.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		65C03BAFE9C19FAD3C4EB9BE /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				D97D480696651C14EEC02B30 /* BugWalletWatchApp.swift */,
+				A439008AB726057D25F3FFD7 /* WatchBlendView.swift */,
+				906794A5BF422E93D35AF0BB /* WatchLogView.swift */,
+				9B1BF206B6F7F01C93BE474D /* WatchModel.swift */,
+				215FADADA57990B09B8654D3 /* WatchStampsView.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		7022C3F8E30E7DDD1706ABEC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F11F152D34764F1F65CEB053 /* BugWallet.app */,
+				44404CF152F7005FB5324B3F /* BugWalletMessages.appex */,
+				7DE814797379D4270A85F193 /* BugWalletStampWidget.appex */,
+				421D8793DCB145DCCB339F83 /* BugWalletWatch.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		785979F33F11C58028FAE0E5 /* PassTemplate */ = {
+			isa = PBXGroup;
+			children = (
+				A05CAC9D41A4DFF8F8B29CED /* icon.png */,
+				0E61ABD15966188F3F4A7304 /* icon@2x.png */,
+				A173A220035DD353E8C16CE1 /* icon@3x.png */,
+				62EE2C940E45E57F929F95BB /* logo.png */,
+				0FEBB74914D5B11C74025ACA /* logo@2x.png */,
+			);
+			path = PassTemplate;
+			sourceTree = "<group>";
+		};
+		7D4DAE1EDED7F35DB76D074E /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				0D5BA412D4F7A5D40A264589 /* LocalPassCreation.xcconfig */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+		8A8231B3FAB0CDCEFCD157F4 /* MessagesExtension */ = {
+			isa = PBXGroup;
+			children = (
+				EC62DE76F4F41E8DECF57A91 /* Resources */,
+				971EB6DB3615302A586651BC /* Sources */,
+			);
+			path = MessagesExtension;
+			sourceTree = "<group>";
+		};
+		8F8F7057F78182AA62F42BFB /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				E658155F801D81941D6FC912 /* StampWidget.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		971EB6DB3615302A586651BC /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				82216EE3AED57AEE636A85CA /* GroupOrder.swift */,
+				EFD58AF7862C633DBF356F6E /* MessagesViewController.swift */,
+				2F4336B855979BA83A67315F /* OrderCardRenderer.swift */,
+				4D6C925B526E275D16FD8C48 /* OrderStore.swift */,
+				0462AC5293C299B58AC985AF /* OrderViews.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		AE486FD58227635EEB880A4C /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4AA999A36147C7DE8E5BF21F /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		EC62DE76F4F41E8DECF57A91 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				2A27D1211AB50781A54DAB2F /* Assets.xcassets */,
+				CC773418C49407A4095940FD /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		F74A18823B17F776A1EDD266 /* BugWallet */ = {
+			isa = PBXGroup;
+			children = (
+				27876BE7FA0169B05BB1C807 /* Resources */,
+				058BDE8FA369C2F214287A01 /* Sources */,
+			);
+			path = BugWallet;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		00F560309E4C1D9E5CF34F3B /* BugWallet */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 751B6B93B8AEF6BD29353B62 /* Build configuration list for PBXNativeTarget "BugWallet" */;
+			buildPhases = (
+				E01FB1B0931822822276A3B0 /* Sources */,
+				419C5FB88576CC3DA6F8845A /* Resources */,
+				343C9EBFABEC7226F373A525 /* Frameworks */,
+				A1FA878D4F13C11580588896 /* Embed Foundation Extensions */,
+				259B0C5591C06D5EB1849517 /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3F0618ADBA9292A7CF0131C1 /* PBXTargetDependency */,
+				4E50E80B2FBA19920961CE9E /* PBXTargetDependency */,
+				A46F48838D893DD490D98110 /* PBXTargetDependency */,
+			);
+			name = BugWallet;
+			packageProductDependencies = (
+				AF217218ADDE899BEE179388 /* X509 */,
+				CFAFC9213695D0D43F7F8C63 /* _CryptoExtras */,
+			);
+			productName = BugWallet;
+			productReference = F11F152D34764F1F65CEB053 /* BugWallet.app */;
+			productType = "com.apple.product-type.application";
+		};
+		9B80C8A2842B080A6FD43D54 /* BugWalletMessages */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B9AF6B40F6233D4483362DFB /* Build configuration list for PBXNativeTarget "BugWalletMessages" */;
+			buildPhases = (
+				4003F1A009C1B1F28004E9C2 /* Sources */,
+				863340947741D6D0C4048B76 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BugWalletMessages;
+			packageProductDependencies = (
+			);
+			productName = BugWalletMessages;
+			productReference = 44404CF152F7005FB5324B3F /* BugWalletMessages.appex */;
+			productType = "com.apple.product-type.app-extension.messages";
+		};
+		A79EC43BC3E53ADF75D9F638 /* BugWalletStampWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A178D2DA3461771A935249B8 /* Build configuration list for PBXNativeTarget "BugWalletStampWidget" */;
+			buildPhases = (
+				F7080BF17F902B4177BF5AA0 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BugWalletStampWidget;
+			packageProductDependencies = (
+			);
+			productName = BugWalletStampWidget;
+			productReference = 7DE814797379D4270A85F193 /* BugWalletStampWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		C9682025759BDE8BE4FFD980 /* BugWalletWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B0301EAFD3541FAFFF6BD2D5 /* Build configuration list for PBXNativeTarget "BugWalletWatch" */;
+			buildPhases = (
+				8F422DE71D18DA5A198535CB /* Sources */,
+				E625EDD9801AC9EBFEAED4DE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BugWalletWatch;
+			packageProductDependencies = (
+			);
+			productName = BugWalletWatch;
+			productReference = 421D8793DCB145DCCB339F83 /* BugWalletWatch.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5661872B688D83F7173483F2 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					00F560309E4C1D9E5CF34F3B = {
+						DevelopmentTeam = 4F5J749858;
+					};
+					9B80C8A2842B080A6FD43D54 = {
+						DevelopmentTeam = 4F5J749858;
+					};
+					A79EC43BC3E53ADF75D9F638 = {
+						DevelopmentTeam = 4F5J749858;
+					};
+					C9682025759BDE8BE4FFD980 = {
+						DevelopmentTeam = 4F5J749858;
+					};
+				};
+			};
+			buildConfigurationList = A8C44AB55221E081FA43541B /* Build configuration list for PBXProject "BugWallet" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 128039C6D2EB7946D7F941D7;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				834DBEF8FB6AEA7C08DFE184 /* XCRemoteSwiftPackageReference "swift-certificates" */,
+				4E606943666D622DD2D0DF17 /* XCRemoteSwiftPackageReference "swift-crypto" */,
+			);
+			preferredProjectObjectVersion = 77;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				00F560309E4C1D9E5CF34F3B /* BugWallet */,
+				9B80C8A2842B080A6FD43D54 /* BugWalletMessages */,
+				A79EC43BC3E53ADF75D9F638 /* BugWalletStampWidget */,
+				C9682025759BDE8BE4FFD980 /* BugWalletWatch */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		419C5FB88576CC3DA6F8845A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C9CC30D0AFF0E2E264B995DA /* Assets.xcassets in Resources */,
+				445BD0149D1499A060CD3831 /* icon.png in Resources */,
+				0F404541428D1D2424BA3EB4 /* icon@2x.png in Resources */,
+				5DE65C413D47A171B2E0B829 /* icon@3x.png in Resources */,
+				DD9DCDCA2AE037D851DCAF0E /* logo.png in Resources */,
+				6621F28A14FAFA2798095616 /* logo@2x.png in Resources */,
+				61D429D1E0AA72299D995C4E /* passcert.pem in Resources */,
+				1391AC2F80D69CC88E841C3E /* passkey.pem in Resources */,
+				E82B1F3EF9D6EB3AE20F3EAD /* wwdr.pem in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		863340947741D6D0C4048B76 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				22665A3ECAD5A1A9BF8EF227 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E625EDD9801AC9EBFEAED4DE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				552530170554760588A58561 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4003F1A009C1B1F28004E9C2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1FBF9E614E415DA04E997A23 /* BeanLink.swift in Sources */,
+				C3F135414F9A95DA8CD9B2F2 /* BlendData.swift in Sources */,
+				67EE2A877D6BEDCD7B709C8B /* BlendFinder.swift in Sources */,
+				AB68DF8D5C554F396F8059C5 /* CoffeeMenu.swift in Sources */,
+				2B718480CF2E6DB0ACF2AD00 /* GroupOrder.swift in Sources */,
+				A2682E227A2471DAFBB76796 /* ImageDecode.swift in Sources */,
+				770762B03C6822401173F8C7 /* MessagesViewController.swift in Sources */,
+				37C9486FB25D68D51FB2928F /* OrderCardRenderer.swift in Sources */,
+				3F0CA2E08B42682BC3F4CE02 /* OrderStore.swift in Sources */,
+				F13B2229068643E4C6966B53 /* OrderViews.swift in Sources */,
+				7B4FFEB4ECCFE6FA9D15DF6B /* SharedKeys.swift in Sources */,
+				16342726CBC183F1AB7C14AE /* StampCard.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8F422DE71D18DA5A198535CB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BCF538831E16D1D57B218993 /* BlendData.swift in Sources */,
+				A88EF29CFED0ECECFBAC46F9 /* BugWalletWatchApp.swift in Sources */,
+				AC8621F5B75849696EEA4116 /* CoffeeMenu.swift in Sources */,
+				C398ED26AA22EE7CC042CFB1 /* HealthLogger.swift in Sources */,
+				B26B3E49FC4AA5A47CD2E9D9 /* ImageDecode.swift in Sources */,
+				DB799C47D00D6971DBA9A6DB /* SharedKeys.swift in Sources */,
+				DB2E6D43771EA0D8689B50B0 /* StampCard.swift in Sources */,
+				1EFB8FD1A84C38BB0DD7797F /* WatchBlendView.swift in Sources */,
+				B7349428D1EBD26D12689936 /* WatchLogView.swift in Sources */,
+				833AD155175017E51430ED48 /* WatchModel.swift in Sources */,
+				BE252651646F7700881000D4 /* WatchStampsView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E01FB1B0931822822276A3B0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				166D8694FEA95DE66689E7EC /* BeanLink.swift in Sources */,
+				E5F30D41496B4D69C3AD862C /* BlendData.swift in Sources */,
+				0BDCF309F3300AA55168F000 /* BlendFinder.swift in Sources */,
+				1CB769E076272490785847A5 /* BugWalletApp.swift in Sources */,
+				B49A6BD7007891A1DD076F7D /* CardView.swift in Sources */,
+				B98BE250A659A230001B8F71 /* CoffeeMenu.swift in Sources */,
+				0A2B017CA717DF8193001F3A /* FirebaseAuth.swift in Sources */,
+				52EF9D352BAF949FEB915DBF /* HealthLogger.swift in Sources */,
+				D069F83017F95DB5A0B13B72 /* ImageDecode.swift in Sources */,
+				7B5A9C8AD6EE93E96A194C2F /* LocalPassScanner.swift in Sources */,
+				D1DF1E31F8F729AB3FDD6E50 /* LoginView.swift in Sources */,
+				78A7DFC93302D6C60394CE6B /* PassBuilder.swift in Sources */,
+				3FF8191D81E9E1C85C58B2DE /* PassSigner.swift in Sources */,
+				00E724A02B1B88E05E0CC78A /* PkPassZip.swift in Sources */,
+				D2AACB23A3BD23C838E6EDB9 /* ProductsView.swift in Sources */,
+				FAF41A2F1F6CF6DB20760103 /* QRGenerator.swift in Sources */,
+				FE7333C8C360C3663F7BFED9 /* SharedKeys.swift in Sources */,
+				B85D586B9B0E615F72A447DE /* StampCard.swift in Sources */,
+				B55856637FF62E2B0328858D /* WatchSync.swift in Sources */,
+				588FA7FCDE85E9D07BE6C96A /* Zip.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F7080BF17F902B4177BF5AA0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				33F9769E29919217C6CB5999 /* BeanLink.swift in Sources */,
+				6E1F80BF69FEA8A2B98FCE4A /* BlendData.swift in Sources */,
+				421E303F95A354985886205A /* BlendFinder.swift in Sources */,
+				956BFC34FB1FC7A4F8EC0E0A /* CoffeeMenu.swift in Sources */,
+				F2C1462D09C53EFBAF067BF5 /* ImageDecode.swift in Sources */,
+				2FB08D1812AC4C1403E9939C /* SharedKeys.swift in Sources */,
+				153C853C0B60BBB6706D8888 /* StampCard.swift in Sources */,
+				0A0D9D13A0B18A2156BBE450 /* StampWidget.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3F0618ADBA9292A7CF0131C1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C9682025759BDE8BE4FFD980 /* BugWalletWatch */;
+			targetProxy = 177B998E4D42663D1A34A1D6 /* PBXContainerItemProxy */;
+		};
+		4E50E80B2FBA19920961CE9E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9B80C8A2842B080A6FD43D54 /* BugWalletMessages */;
+			targetProxy = 62FF63D5AD89B7F369380DD5 /* PBXContainerItemProxy */;
+		};
+		A46F48838D893DD490D98110 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A79EC43BC3E53ADF75D9F638 /* BugWalletStampWidget */;
+			targetProxy = 06543FD54BD7FE5FD7E3E159 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		049CC0CCB9249445479EC483 /* Debug-LocalPass */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0D5BA412D4F7A5D40A264589 /* LocalPassCreation.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = BugWallet/BugWallet.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = BugWallet/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zerogravityroom.bugwallet;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Debug-LocalPass";
+		};
+		147167781700E83072A1D44F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 4F5J749858;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				WATCHOS_DEPLOYMENT_TARGET = 9.0;
+			};
+			name = Release;
+		};
+		25A1DBC309ED88B8DEF6DE31 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = StampWidget/StampWidget.entitlements;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = StampWidget/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zerogravityroom.bugwallet.StampWidget;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		5563C4AA8089C892BF6168FF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = BugWallet/BugWallet.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = BugWallet/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zerogravityroom.bugwallet;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		5F6D2FFA11FC04EA5AE5E490 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = MessagesExtension/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zerogravityroom.bugwallet.MessagesExtension;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		74E904F2513047D65369DC55 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = BugWalletWatch/BugWalletWatch.entitlements;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = BugWalletWatch/Info.plist;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zerogravityroom.bugwallet.watchkitapp;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 9.0;
+			};
+			name = Debug;
+		};
+		7BBB29207D247FF4D36BE548 /* Debug-LocalPass */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 4F5J749858;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				WATCHOS_DEPLOYMENT_TARGET = 9.0;
+			};
+			name = "Debug-LocalPass";
+		};
+		7FBD85FA163B708B2E7C0307 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 4F5J749858;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				WATCHOS_DEPLOYMENT_TARGET = 9.0;
+			};
+			name = Debug;
+		};
+		916026849BC4ACF00F94E712 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = BugWallet/BugWallet.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = BugWallet/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zerogravityroom.bugwallet;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		994E83B0D6FBC02A7C99A3BB /* Debug-LocalPass */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = StampWidget/StampWidget.entitlements;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = StampWidget/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zerogravityroom.bugwallet.StampWidget;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Debug-LocalPass";
+		};
+		B40FF80A6364EFD7EFED24FB /* Debug-LocalPass */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = BugWalletWatch/BugWalletWatch.entitlements;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = BugWalletWatch/Info.plist;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zerogravityroom.bugwallet.watchkitapp;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 9.0;
+			};
+			name = "Debug-LocalPass";
+		};
+		C564D25B7036FB1341E3BD1A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = StampWidget/StampWidget.entitlements;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = StampWidget/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zerogravityroom.bugwallet.StampWidget;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		EBD2836C7EC8323D554244C6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = MessagesExtension/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zerogravityroom.bugwallet.MessagesExtension;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		F2EC168998F094B1B03D1391 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = BugWalletWatch/BugWalletWatch.entitlements;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = BugWalletWatch/Info.plist;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zerogravityroom.bugwallet.watchkitapp;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 9.0;
+			};
+			name = Release;
+		};
+		FBB8D998209BD3BC5BB88EAC /* Debug-LocalPass */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = MessagesExtension/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zerogravityroom.bugwallet.MessagesExtension;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Debug-LocalPass";
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		751B6B93B8AEF6BD29353B62 /* Build configuration list for PBXNativeTarget "BugWallet" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				916026849BC4ACF00F94E712 /* Debug */,
+				049CC0CCB9249445479EC483 /* Debug-LocalPass */,
+				5563C4AA8089C892BF6168FF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A178D2DA3461771A935249B8 /* Build configuration list for PBXNativeTarget "BugWalletStampWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C564D25B7036FB1341E3BD1A /* Debug */,
+				994E83B0D6FBC02A7C99A3BB /* Debug-LocalPass */,
+				25A1DBC309ED88B8DEF6DE31 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A8C44AB55221E081FA43541B /* Build configuration list for PBXProject "BugWallet" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7FBD85FA163B708B2E7C0307 /* Debug */,
+				7BBB29207D247FF4D36BE548 /* Debug-LocalPass */,
+				147167781700E83072A1D44F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		B0301EAFD3541FAFFF6BD2D5 /* Build configuration list for PBXNativeTarget "BugWalletWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				74E904F2513047D65369DC55 /* Debug */,
+				B40FF80A6364EFD7EFED24FB /* Debug-LocalPass */,
+				F2EC168998F094B1B03D1391 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		B9AF6B40F6233D4483362DFB /* Build configuration list for PBXNativeTarget "BugWalletMessages" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5F6D2FFA11FC04EA5AE5E490 /* Debug */,
+				FBB8D998209BD3BC5BB88EAC /* Debug-LocalPass */,
+				EBD2836C7EC8323D554244C6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4E606943666D622DD2D0DF17 /* XCRemoteSwiftPackageReference "swift-crypto" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-crypto.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
+		834DBEF8FB6AEA7C08DFE184 /* XCRemoteSwiftPackageReference "swift-certificates" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-certificates.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AF217218ADDE899BEE179388 /* X509 */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 834DBEF8FB6AEA7C08DFE184 /* XCRemoteSwiftPackageReference "swift-certificates" */;
+			productName = X509;
+		};
+		CFAFC9213695D0D43F7F8C63 /* _CryptoExtras */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4E606943666D622DD2D0DF17 /* XCRemoteSwiftPackageReference "swift-crypto" */;
+			productName = _CryptoExtras;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 5661872B688D83F7173483F2 /* Project object */;
+}

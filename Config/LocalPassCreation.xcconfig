@@ -1,0 +1,22 @@
+// Config/LocalPassCreation.xcconfig
+//
+// Feature flag: on-device ("local") Apple Wallet pass creation.
+//
+// Turning this on enables every code path that builds and CMS-signs a .pkpass on
+// the device: the "Add to Apple Wallet" button, the scan-a-QR-and-share flow, and
+// the PassSigner that reads the bundled Pass Type ID private key. It is OFF in the
+// default Debug/Release configs on purpose — such a build embeds that private key
+// (see BugWallet/Sources/PassSigner.swift and the README security note) and must
+// not be distributed.
+//
+// Wiring: this file is the base configuration for the `Debug-LocalPass` build
+// configuration of the BugWallet target, and the `BugWallet-LocalPass` scheme
+// runs that configuration. See project.yml.
+
+// Human-readable marker (handy in build logs / Info if ever surfaced).
+LOCAL_PASS_CREATION_ENABLED = YES
+
+// Drives the `#if LOCAL_PASS_CREATION` compile-time guards in Swift. `$(inherited)`
+// preserves the DEBUG condition the debug configuration already sets at the
+// project level, so this only *adds* the flag.
+SWIFT_ACTIVE_COMPILATION_CONDITIONS = $(inherited) LOCAL_PASS_CREATION

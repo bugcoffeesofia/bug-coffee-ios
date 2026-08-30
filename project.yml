@@ -1,0 +1,203 @@
+name: BugWallet
+options:
+  bundleIdPrefix: com.zerogravityroom
+  deploymentTarget:
+    iOS: "16.0"
+    watchOS: "9.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    DEVELOPMENT_TEAM: "4F5J749858"
+
+# Build configurations. `Debug-LocalPass` is a normal debug build with on-device
+# Wallet pass creation/signing switched on via Config/LocalPassCreation.xcconfig
+# (attached to the BugWallet target below). Keep Debug/Release for everyday work.
+configs:
+  Debug: debug
+  Release: release
+  Debug-LocalPass: debug
+
+packages:
+  # Apple's X.509 / CMS stack — used to sign the .pkpass on-device.
+  SwiftCertificates:
+    url: https://github.com/apple/swift-certificates.git
+    from: "1.0.0"
+  SwiftCrypto:
+    url: https://github.com/apple/swift-crypto.git
+    from: "3.0.0"
+
+schemes:
+  BugWallet:
+    build:
+      targets:
+        BugWallet: all
+    run:
+      config: Debug
+    archive:
+      config: Release
+
+  BugWalletMessages:
+    build:
+      targets:
+        BugWalletMessages: all
+        BugWallet: [run]
+    run:
+      config: Debug
+      # Extension schemes launch a host app (Messages) rather than the target.
+      askForAppToLaunch: true
+      launchAutomaticallySubstyle: 2
+    archive:
+      config: Release
+
+  BugWalletWatch:
+    build:
+      targets:
+        BugWalletWatch: all
+    run:
+      config: Debug
+    archive:
+      config: Release
+
+  # Same app, built with local (on-device) Wallet pass creation enabled. Use this
+  # scheme when you want the "Add to Apple Wallet" and scan-a-QR-and-share buttons.
+  # Everything it unlocks lives behind `#if LOCAL_PASS_CREATION`.
+  BugWallet-LocalPass:
+    build:
+      targets:
+        BugWallet: all
+    run:
+      config: Debug-LocalPass
+    archive:
+      config: Debug-LocalPass
+
+targets:
+  BugWallet:
+    type: application
+    platform: iOS
+    # Only the Debug-LocalPass config gets the feature-flag xcconfig; Debug and
+    # Release leave LOCAL_PASS_CREATION undefined, so that code is compiled out.
+    configFiles:
+      Debug-LocalPass: Config/LocalPassCreation.xcconfig
+    sources:
+      - path: BugWallet/Sources
+      - path: Shared
+      - path: BugWallet/Resources
+      # Bundled pass images (icon/logo). Flattened into the app bundle so
+      # PassBuilder can copy them into the unsigned pass at runtime.
+      - path: PassTemplate
+        buildPhase: resources
+    dependencies:
+      - package: SwiftCertificates
+        product: X509
+      - package: SwiftCrypto
+        product: _CryptoExtras
+      # Embed the Watch app into the iOS app.
+      - target: BugWalletWatch
+        embed: true
+      # iMessage app (group coffee orders) — embedded into PlugIns.
+      - target: BugWalletMessages
+      # Home-screen stamp-card widget — embedded into PlugIns.
+      - target: BugWalletStampWidget
+    # App Group so the widget can read the stamp count, plus HealthKit so
+    # "Log a coffee" can write caffeine samples. XcodeGen regenerates this
+    # .entitlements file from these properties, so declare everything here.
+    entitlements:
+      path: BugWallet/BugWallet.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.zerogravityroom.bugwallet
+        com.apple.developer.healthkit: true
+        com.apple.developer.healthkit.access: []
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.zerogravityroom.bugwallet
+        INFOPLIST_FILE: BugWallet/Resources/Info.plist
+        GENERATE_INFOPLIST_FILE: NO
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SWIFT_VERSION: "5.0"
+
+  # iMessage app: share a group coffee order in a chat; everyone taps the
+  # bubble, picks their drinks, and sends the updated order back. The order
+  # state travels inside the message URL (MSSession) — no server.
+  BugWalletMessages:
+    type: app-extension.messages
+    platform: iOS
+    sources:
+      - path: MessagesExtension/Sources
+      - path: MessagesExtension/Resources
+      # Shared menu/model code (MenuItem, CoffeeMenu, FavoritesStore, BlendFinder)
+      # — the order UI reuses it, same as the Watch and Widget targets.
+      - path: Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.zerogravityroom.bugwallet.MessagesExtension
+        INFOPLIST_FILE: MessagesExtension/Resources/Info.plist
+        GENERATE_INFOPLIST_FILE: NO
+        ASSETCATALOG_COMPILER_APPICON_NAME: "iMessage App Icon"
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SWIFT_VERSION: "5.0"
+
+  # Home-screen widget: the stamp card. The count is tracked manually in the
+  # app (the live one is App Check-gated) and shared via the App Group.
+  BugWalletStampWidget:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: StampWidget/Sources
+      - path: StampWidget/Resources
+      - path: Shared
+    entitlements:
+      path: StampWidget/StampWidget.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.zerogravityroom.bugwallet
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.zerogravityroom.bugwallet.StampWidget
+        INFOPLIST_FILE: StampWidget/Resources/Info.plist
+        GENERATE_INFOPLIST_FILE: NO
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SWIFT_VERSION: "5.0"
+
+  BugWalletWatch:
+    type: application
+    platform: watchOS
+    sources:
+      - path: BugWalletWatch/Sources
+      # Only the watchOS-safe Shared files. The rest of Shared is iOS-only
+      # SwiftUI (e.g. BlendFinderView uses .segmented, unavailable on watchOS),
+      # so pull in just what the Watch app references. BlendData.swift holds the
+      # BlendFinderView-free scoring/data; StampCard.swift's views are watch-safe.
+      - path: Shared/ImageDecode.swift
+      - path: Shared/SharedKeys.swift
+      - path: Shared/CoffeeMenu.swift
+      - path: Shared/BlendData.swift
+      - path: Shared/StampCard.swift
+      # Caffeine logging reuses the phone's HealthKit logger verbatim.
+      - path: BugWallet/Sources/HealthLogger.swift
+      - path: BugWalletWatch/Resources
+    # HealthKit capability so the Watch app can write caffeine samples.
+    entitlements:
+      path: BugWalletWatch/BugWalletWatch.entitlements
+      properties:
+        com.apple.developer.healthkit: true
+        com.apple.developer.healthkit.access: []
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.zerogravityroom.bugwallet.watchkitapp
+        INFOPLIST_FILE: BugWalletWatch/Info.plist
+        GENERATE_INFOPLIST_FILE: NO
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        TARGETED_DEVICE_FAMILY: "4"
+        SWIFT_VERSION: "5.0"
+        WATCHOS_DEPLOYMENT_TARGET: "9.0"
