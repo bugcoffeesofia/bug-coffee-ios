@@ -201,3 +201,9 @@ targets:
         TARGETED_DEVICE_FAMILY: "4"
         SWIFT_VERSION: "5.0"
         WATCHOS_DEPLOYMENT_TARGET: "9.0"
+        # Pin the platform explicitly. Under Xcode 26 the iOS build was
+        # "specializing" this embedded watch dependency to the iOS Simulator
+        # (compiling it with the iPhoneSimulator SDK → WCSessionDelegate
+        # conformance failures), instead of building it for watchOS. An explicit
+        # SUPPORTED_PLATFORMS keeps the build graph on the watch SDK.
+        SUPPORTED_PLATFORMS: "watchos watchsimulator"

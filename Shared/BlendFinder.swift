@@ -59,10 +59,21 @@ struct BlendFinderView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Close") { dismiss() }
+                    // Titled and drawn: a vertical bar shows the symbol.
+                    Button {
+                        dismiss()
+                    } label: {
+                        Label("Close", systemImage: "xmark")
+                    }
                 }
             }
         }
+        // TODO(iPhone Duo, iOS 27.1 SDK): a sheet whose only control is Close is
+        // one of the two cases the HIG lets opt out of the vertical bar. Try it in
+        // Device Hub; if a horizontal bar reads better on the outer display, opt
+        // out once the modifier ships (it's not in the iOS 27.0 SDK):
+        //
+        //     .toolbarVerticalBehavior(.disabled)
     }
 
     private var matches: [MenuItem] {

@@ -5,6 +5,10 @@ struct CardView: View {
     let account: Account
     @EnvironmentObject private var session: Session
     @Environment(\.scenePhase) private var scenePhase
+    // Compact on iPhones, iPhone Duo's outer display and a narrow Split View;
+    // regular on the Duo's inner display (and iPad), which gets the two-half
+    // layout.
+    @Environment(\.horizontalSizeClass) private var widthClass
 
     // Local (on-device) pass creation state — only compiled into the
     // Debug-LocalPass config (BugWallet-LocalPass scheme). See
@@ -36,6 +40,9 @@ struct CardView: View {
     @State private var isLogging = false
 
     @State private var stamps = StampStore.count
+    // The App Check WebView reads the live count from the backend (doc §7,
+    // variant 3) and publishes it here; we fold it into the displayed count.
+    @ObservedObject private var webSync = StampWebSync.shared
 
     private let brand = Color(red: 31/255, green: 4/255, blue: 9/255)
     private let accent = Color(red: 204/255, green: 30/255, blue: 65/255)
@@ -43,175 +50,56 @@ struct CardView: View {
     var body: some View {
         ZStack {
             brand.ignoresSafeArea()
-            VStack(spacing: 20) {
-                HStack {
-                    VStack(alignment: .leading) {
-                        Text("Bug Coffee")
-                            .font(.title2.bold())
-                            .foregroundStyle(.white)
-                        Text(account.email)
-                            .font(.caption)
-                            .foregroundStyle(.white.opacity(0.7))
-                    }
-                    Spacer()
-                    Button("Sign out") { session.signOut() }
-                        .font(.caption)
-                        .foregroundStyle(accent)
+            FittingScrollView { size in
+                if widthClass == .regular {
+                    regularLayout(isWide: size.width > size.height)
+                } else {
+                    compactLayout
                 }
-                .padding(.horizontal)
-                .padding(.top)
-
-                Spacer()
-
-                // The loyalty QR — the raw Firebase UID, level H (doc §6).
-                if let qr = QRGenerator.image(from: account.uid) {
-                    Image(uiImage: qr)
-                        .interpolation(.none)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 180, height: 180)
-                        .padding(16)
-                        .background(.white, in: RoundedRectangle(cornerRadius: 20))
-                }
-
-                Text("Show this to the barista")
-                    .font(.subheadline)
-                    .foregroundStyle(.white.opacity(0.8))
-
-                Spacer()
-
-                // Manually tracked stamps — the live count is App Check-gated
-                // (doc §7), so tap + whenever the barista stamps you. The same
-                // count feeds the home-screen widget through the App Group.
-                VStack(spacing: 12) {
-                    HStack {
-                        Text("Stamps")
-                            .font(.subheadline.bold())
-                            .foregroundStyle(.white)
-                        Spacer()
-                        Text("\(stamps) / \(StampStore.maxStamps)")
-                            .font(.subheadline.monospacedDigit())
-                            .foregroundStyle(accent)
-                        stepButton("minus.circle.fill") { stamps = max(0, stamps - 1) }
-                        stepButton("plus.circle.fill") { stamps = min(StampStore.maxStamps, stamps + 1) }
-                    }
-                    StampCardView(count: stamps, slotSize: 34, spacing: 8)
-                }
-                .padding(.horizontal)
-                .onChange(of: stamps) {
-                    StampStore.setCount($0)
-                    WatchSync.shared.syncStamps($0)
-                }
-
-                Spacer()
-
-                // Log a coffee to Apple Health as dietary caffeine.
-                Menu {
-                    ForEach(CoffeeDrink.allCases) { drink in
-                        Button("\(drink.name) · \(Int(drink.caffeineMilligrams)) mg") {
-                            logCoffee(drink)
-                        }
-                    }
-                } label: {
-                    Label(isLogging ? "Logging…" : "Log a coffee",
-                          systemImage: "cup.and.saucer.fill")
-                        .font(.subheadline.bold())
-                        .foregroundStyle(.white)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 44)
-                        .background(accent, in: RoundedRectangle(cornerRadius: 12))
-                }
-                .padding(.horizontal)
-                .disabled(isLogging)
-
-                if let logResult {
-                    Text(logResult)
-                        .font(.footnote)
-                        .foregroundStyle(.white.opacity(0.8))
-                }
-
-                // Local pass creation (Debug-LocalPass config only): the official
-                // "Add to Apple Wallet" button plus a button that scans another
-                // loyalty QR, signs a pass for it on-device, and shares it.
-                #if LOCAL_PASS_CREATION
-                HStack(spacing: 12) {
-                    // Add-to-Wallet builds & signs this account's pass, then hands
-                    // it to Wallet. Swapped for a status label once it's added.
-                    switch walletStatus {
-                    case .checking:
-                        Color.clear.frame(maxWidth: .infinity, minHeight: 48)
-                    case .inWallet:
-                        Label("In Apple Wallet", systemImage: "checkmark.seal.fill")
-                            .font(.subheadline.bold())
-                            .foregroundStyle(.white.opacity(0.8))
-                            .frame(maxWidth: .infinity, minHeight: 48)
-                    case .notInWallet:
-                        AddToWalletButton(action: handleAddToWallet)
-                            .frame(maxWidth: .infinity, minHeight: 48)
-                            .opacity(isAdding ? 0.5 : 1)
-                            .disabled(isAdding)
-                    }
-
-                    // Scan a loyalty QR → build & sign a pass for that UID → share.
-                    Button { isScanning = true } label: {
-                        Image(systemName: isSharing ? "hourglass" : "qrcode.viewfinder")
-                            .font(.title2)
-                            .foregroundStyle(.white)
-                            .frame(width: 48, height: 48)
-                            .background(accent, in: RoundedRectangle(cornerRadius: 12))
-                    }
-                    .disabled(isSharing)
-                    .accessibilityLabel("Scan and share a pass")
-                }
-                .padding(.horizontal)
-                .fullScreenCover(isPresented: $isScanning, onDismiss: {
-                    // Once the camera is gone, ask for the name to print on the pass.
-                    if scannedUID != nil { isNamePromptPresented = true }
-                }) {
-                    QRScannerView(
-                        onScan: { code in
-                            scannedUID = code.trimmingCharacters(in: .whitespacesAndNewlines)
-                            isScanning = false
-                        },
-                        onCancel: { isScanning = false }
-                    )
-                    .ignoresSafeArea()
-                }
-                .alert("Name for the pass", isPresented: $isNamePromptPresented) {
-                    TextField("Name", text: $nameInput)
-                    Button("Cancel", role: .cancel) { scannedUID = nil; nameInput = "" }
-                    Button("Create pass") {
-                        if let uid = scannedUID {
-                            handleScannedPass(uid: uid, name: nameInput)
-                        }
-                        scannedUID = nil; nameInput = ""
-                    }
-                } message: {
-                    Text("This name will appear on the shared Wallet pass.")
-                }
-                .sheet(item: $sharePayload) { payload in
-                    ActivityView(items: [payload.url])
-                }
-
-                if let addResult {
-                    Text(addResult)
-                        .font(.footnote)
-                        .foregroundStyle(.white.opacity(0.8))
-                }
-                if let shareResult {
-                    Text(shareResult)
-                        .font(.footnote)
-                        .foregroundStyle(.white.opacity(0.8))
-                }
-                #endif
-
-                Text("UID: \(account.uid)")
-                    .font(.caption2.monospaced())
-                    .foregroundStyle(.white.opacity(0.4))
-                    .textSelection(.enabled)
-                    .padding(.bottom)
             }
         }
+        // Everything from here down hangs off the root rather than one of the
+        // sections, so it survives the compact ⇄ regular switch when iPhone Duo
+        // opens or closes: a scanner, alert or share sheet that's up stays up.
+        .onChange(of: stamps) {
+            StampStore.setCount($0)
+            WatchSync.shared.syncStamps($0)
+        }
+        .onReceive(webSync.$backendCount.compactMap { $0 }) { live in
+            // The backend is authoritative — adopt the live count when
+            // it arrives (this also overrides a stale manual value).
+            if live != stamps { stamps = live }
+        }
+        #if LOCAL_PASS_CREATION
+        .fullScreenCover(isPresented: $isScanning, onDismiss: {
+            // Once the camera is gone, ask for the name to print on the pass.
+            if scannedUID != nil { isNamePromptPresented = true }
+        }) {
+            QRScannerView(
+                onScan: { code in
+                    scannedUID = code.trimmingCharacters(in: .whitespacesAndNewlines)
+                    isScanning = false
+                },
+                onCancel: { isScanning = false }
+            )
+            .ignoresSafeArea()
+        }
+        .alert("Name for the pass", isPresented: $isNamePromptPresented) {
+            TextField("Name", text: $nameInput)
+            Button("Cancel", role: .cancel) { scannedUID = nil; nameInput = "" }
+            Button("Create pass") {
+                if let uid = scannedUID {
+                    handleScannedPass(uid: uid, name: nameInput)
+                }
+                scannedUID = nil; nameInput = ""
+            }
+        } message: {
+            Text("This name will appear on the shared Wallet pass.")
+        }
+        .sheet(item: $sharePayload) { payload in
+            ActivityView(items: [payload.url])
+        }
+        #endif
         .task {
             #if LOCAL_PASS_CREATION
             await refreshWalletStatus()
@@ -224,6 +112,226 @@ struct CardView: View {
             if phase == .active { Task { await refreshWalletStatus() } }
             #endif
         }
+    }
+
+    // MARK: - Layouts
+
+    /// iPhones and the outer display: one column, spread out by spacers.
+    private var compactLayout: some View {
+        VStack(spacing: 20) {
+            header
+            Spacer()
+            qrSection
+            Spacer()
+            stampsSection
+            Spacer()
+            actionsSection
+            footer
+        }
+    }
+
+    /// The inner display (and iPad): the QR gets one half and the stamps and
+    /// buttons the other — side by side when the space is wide, stacked when
+    /// it's tall, the same rule as ArrangementView's split style. That keeps
+    /// the fold between the halves instead of through the QR or a button.
+    private func regularLayout(isWide: Bool) -> some View {
+        // TODO(iPhone Duo, iOS 27.1 SDK): replace the hand-rolled halves with an
+        // arrangement view once it ships (it's not in the iOS 27.0 SDK). The split
+        // style makes the same side-by-side / stacked choice but splits at the
+        // fold itself; these halves split the safe area, which is off-center when
+        // the insets are uneven. An arrangement view must not sit in a
+        // ScrollView, so take this layout out of FittingScrollView at the same time.
+        //
+        //     ArrangementView {
+        //         qrSection
+        //     } secondary: {
+        //         controlsSection
+        //     }
+        //     .arrangementViewStyle(.split)
+        let halves = isWide ? AnyLayout(HStackLayout(spacing: 0))
+                            : AnyLayout(VStackLayout(spacing: 0))
+        return VStack(spacing: 20) {
+            header
+            halves {
+                qrSection
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                controlsSection
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+            footer
+        }
+    }
+
+    // MARK: - Sections
+
+    private var header: some View {
+        // TODO(iPhone Duo, iOS 27.1 SDK): this row is hand-placed along the top
+        // edge, near the outer display's front camera (a corner cut-out that
+        // grows into the Dynamic Island for Live Activities). Check it in Device
+        // Hub; if the camera crowds "Sign out", keep the row clear of it once
+        // `reservedRegions(kind:)` ships (it's not in the iOS 27.0 SDK):
+        //
+        //     @State private var cameraFrames: [CGRect] = []
+        //
+        //     .onGeometryChange(for: [CGRect].self) { proxy in
+        //         proxy.reservedRegions(kind: .occlusion).map(\.frame)
+        //     } action: { cameraFrames = $0 }
+        //     // …then pad the row past any frame it overlaps (confirm which
+        //     // coordinate space the frames use first).
+        HStack {
+            VStack(alignment: .leading) {
+                Text("Bug Coffee")
+                    .font(.title2.bold())
+                    .foregroundStyle(.white)
+                Text(account.email)
+                    .font(.caption)
+                    .foregroundStyle(.white.opacity(0.7))
+            }
+            Spacer()
+            Button("Sign out") { session.signOut() }
+                .font(.caption)
+                .foregroundStyle(accent)
+        }
+        .padding(.horizontal)
+        .padding(.top)
+    }
+
+    private var qrSection: some View {
+        VStack(spacing: 20) {
+            // The loyalty QR — the raw Firebase UID, level H (doc §6).
+            if let qr = QRGenerator.image(from: account.uid) {
+                Image(uiImage: qr)
+                    .interpolation(.none)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 180, height: 180)
+                    .padding(16)
+                    .background(.white, in: RoundedRectangle(cornerRadius: 20))
+            }
+
+            Text("Show this to the barista")
+                .font(.subheadline)
+                .foregroundStyle(.white.opacity(0.8))
+        }
+    }
+
+    // Manually tracked stamps — the live count is App Check-gated
+    // (doc §7), so tap + whenever the barista stamps you. The same
+    // count feeds the home-screen widget through the App Group.
+    private var stampsSection: some View {
+        VStack(spacing: 12) {
+            HStack {
+                Text("Stamps")
+                    .font(.subheadline.bold())
+                    .foregroundStyle(.white)
+                Spacer()
+                Text("\(stamps) / \(StampStore.maxStamps)")
+                    .font(.subheadline.monospacedDigit())
+                    .foregroundStyle(accent)
+                stepButton("minus.circle.fill") { stamps = max(0, stamps - 1) }
+                stepButton("plus.circle.fill") { stamps = min(StampStore.maxStamps, stamps + 1) }
+            }
+            StampCardView(count: stamps, slotSize: 34, spacing: 8)
+            // Live-sync status (App Check WebView, doc §7 variant 3).
+            Text("Backend: \(webSync.status)")
+                .font(.caption2.monospacedDigit())
+                .foregroundStyle(.white.opacity(0.5))
+        }
+        .padding(.horizontal)
+    }
+
+    /// The stamps and buttons as one half of the regular layout, held to a
+    /// readable width — a whole half of a wide display stretches the rows.
+    private var controlsSection: some View {
+        VStack(spacing: 20) {
+            stampsSection
+            actionsSection
+        }
+        .frame(maxWidth: 440)
+    }
+
+    private var actionsSection: some View {
+        VStack(spacing: 20) {
+            // Log a coffee to Apple Health as dietary caffeine.
+            Menu {
+                ForEach(CoffeeDrink.allCases) { drink in
+                    Button("\(drink.name) · \(Int(drink.caffeineMilligrams)) mg") {
+                        logCoffee(drink)
+                    }
+                }
+            } label: {
+                Label(isLogging ? "Logging…" : "Log a coffee",
+                      systemImage: "cup.and.saucer.fill")
+                    .font(.subheadline.bold())
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 44)
+                    .background(accent, in: RoundedRectangle(cornerRadius: 12))
+            }
+            .padding(.horizontal)
+            .disabled(isLogging)
+
+            if let logResult {
+                Text(logResult)
+                    .font(.footnote)
+                    .foregroundStyle(.white.opacity(0.8))
+            }
+
+            // Local pass creation (Debug-LocalPass config only): the official
+            // "Add to Apple Wallet" button plus a button that scans another
+            // loyalty QR, signs a pass for it on-device, and shares it.
+            #if LOCAL_PASS_CREATION
+            HStack(spacing: 12) {
+                // Add-to-Wallet builds & signs this account's pass, then hands
+                // it to Wallet. Swapped for a status label once it's added.
+                switch walletStatus {
+                case .checking:
+                    Color.clear.frame(maxWidth: .infinity, minHeight: 48)
+                case .inWallet:
+                    Label("In Apple Wallet", systemImage: "checkmark.seal.fill")
+                        .font(.subheadline.bold())
+                        .foregroundStyle(.white.opacity(0.8))
+                        .frame(maxWidth: .infinity, minHeight: 48)
+                case .notInWallet:
+                    AddToWalletButton(action: handleAddToWallet)
+                        .frame(maxWidth: .infinity, minHeight: 48)
+                        .opacity(isAdding ? 0.5 : 1)
+                        .disabled(isAdding)
+                }
+
+                // Scan a loyalty QR → build & sign a pass for that UID → share.
+                Button { isScanning = true } label: {
+                    Image(systemName: isSharing ? "hourglass" : "qrcode.viewfinder")
+                        .font(.title2)
+                        .foregroundStyle(.white)
+                        .frame(width: 48, height: 48)
+                        .background(accent, in: RoundedRectangle(cornerRadius: 12))
+                }
+                .disabled(isSharing)
+                .accessibilityLabel("Scan and share a pass")
+            }
+            .padding(.horizontal)
+
+            if let addResult {
+                Text(addResult)
+                    .font(.footnote)
+                    .foregroundStyle(.white.opacity(0.8))
+            }
+            if let shareResult {
+                Text(shareResult)
+                    .font(.footnote)
+                    .foregroundStyle(.white.opacity(0.8))
+            }
+            #endif
+        }
+    }
+
+    private var footer: some View {
+        Text("UID: \(account.uid)")
+            .font(.caption2.monospaced())
+            .foregroundStyle(.white.opacity(0.4))
+            .textSelection(.enabled)
+            .padding(.bottom)
     }
 
     // MARK: - Local pass creation (Debug-LocalPass config only)

@@ -150,3 +150,35 @@ names.
 
 The pass images in `PassTemplate/` are brand-colored placeholders; swap in real
 artwork (keep the same filenames and `@2x/@3x` sizes) before shipping.
+
+## iPhone Duo
+
+Prepared for iPhone Duo following the readiness checklist in
+`../../RnD/iPhone Duo/README.md`. Build with **Xcode 27** (the RC is at
+`/Applications/Xcode-RC.app`) so the iOS 27 toolbar APIs compile in. Xcode 26
+still builds the project, because those calls sit behind `#if compiler(>=6.4)`.
+
+- **Card**: compact width keeps the single column. Regular width (the inner
+  display) gives the QR one half and the stamps and buttons the other, side by
+  side when the space is wide and stacked when it's tall, so the fold falls
+  between them. The scanner, alert and share sheet hang off the root, so they
+  stay up while the device opens or closes.
+- **Login and Card** scroll instead of clipping when the height runs out
+  (`FittingScrollView`: Split View, the keyboard, large Dynamic Type).
+- **Products** is a `NavigationSplitView`: the list and the bean page sit side
+  by side on the inner display, with the usual push on the outer one.
+- **Toolbars**: every item has a title and a symbol. On iOS 27 the favorite
+  star is the last to overflow (`.visibilityPriority(.high)`) and the tasting
+  editor's Save is pinned (`.topBarPinnedTrailing`).
+- **Scanner** (LocalPass): pinned to the safe area on every edge, and kept
+  upright with `AVCaptureDevice.RotationCoordinator`, because the inner display
+  ignores the portrait lock in `Info.plist`. The lock stays for the outer
+  display.
+
+Anything that needs the iOS 27.1 SDK (reserved regions for the fold and the
+cameras, `ArrangementView`, the vertical-bar opt-out) is marked with a TODO and
+the commented-out code to drop in:
+
+```sh
+grep -rn "TODO(iPhone Duo" --include='*.swift' .
+```

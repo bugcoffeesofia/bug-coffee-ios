@@ -13,6 +13,9 @@ enum SharedKeys {
     static let defaultsUID = "bug-coffee.uid"
     static let defaultsEmail = "bug-coffee.email"
     static let defaultsQR = "bug-coffee.qr"
+    // Firebase refresh token — persisted so the App Check WebView (StampWebSync)
+    // can seed a logged-in web session across launches without a second login.
+    static let defaultsRefresh = "bug-coffee.refresh"
 
     // App Group shared between the iPhone app, the widget extension and the
     // iMessage extension — the stamp count lives there so the home-screen

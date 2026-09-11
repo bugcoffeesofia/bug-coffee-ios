@@ -9,6 +9,23 @@ struct PkPassZip {
     private var central = Data()
     private var count: UInt16 = 0
 
+    // Made by Unix (upper byte 3), so extractors honor the mode below.
+    private static let versionMadeBy: UInt16 = 3 << 8 | 20
+    // Regular file, rw-r--r--, as a Unix mode in the upper 16 bits.
+    private static let externalAttrs: UInt32 = 0o100644 << 16
+
+    // DOS timestamp stamped on every entry. All-zero is not a valid DOS date
+    // (month 0, day 0), so use the time the archive is built.
+    private let modTime: UInt16
+    private let modDate: UInt16
+
+    init(date: Date = Date()) {
+        let c = Calendar(identifier: .gregorian)
+            .dateComponents([.year, .month, .day, .hour, .minute, .second], from: date)
+        modTime = UInt16(c.hour! << 11 | c.minute! << 5 | c.second! / 2)
+        modDate = UInt16((max(c.year!, 1980) - 1980) << 9 | c.month! << 5 | c.day!)
+    }
+
     mutating func add(_ name: String, _ content: Data) {
         let nameBytes = Array(name.utf8)
         let crc = CRC32.checksum(content)
@@ -20,8 +37,8 @@ struct PkPassZip {
         body.append(le16: 20)          // version needed
         body.append(le16: 0)           // flags
         body.append(le16: 0)           // method: store
-        body.append(le16: 0)           // mod time
-        body.append(le16: 0)           // mod date
+        body.append(le16: modTime)
+        body.append(le16: modDate)
         body.append(le32: crc)
         body.append(le32: size)        // compressed
         body.append(le32: size)        // uncompressed
@@ -32,12 +49,12 @@ struct PkPassZip {
 
         // Central directory record
         central.append(le32: 0x0201_4b50)
-        central.append(le16: 20)       // version made by
+        central.append(le16: Self.versionMadeBy)
         central.append(le16: 20)       // version needed
         central.append(le16: 0)        // flags
         central.append(le16: 0)        // method
-        central.append(le16: 0)        // mod time
-        central.append(le16: 0)        // mod date
+        central.append(le16: modTime)
+        central.append(le16: modDate)
         central.append(le32: crc)
         central.append(le32: size)
         central.append(le32: size)
@@ -46,7 +63,7 @@ struct PkPassZip {
         central.append(le16: 0)        // comment length
         central.append(le16: 0)        // disk number
         central.append(le16: 0)        // internal attrs
-        central.append(le32: 0)        // external attrs
+        central.append(le32: Self.externalAttrs)
         central.append(le32: offset)
         central.append(contentsOf: nameBytes)
 

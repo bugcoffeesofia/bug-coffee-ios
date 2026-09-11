@@ -58,6 +58,7 @@
 		BCF538831E16D1D57B218993 /* BlendData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2886C48D4C0E2624A976710 /* BlendData.swift */; };
 		BD274305AC2B34083D7CFEDB /* _CryptoExtras in Frameworks */ = {isa = PBXBuildFile; productRef = CFAFC9213695D0D43F7F8C63 /* _CryptoExtras */; };
 		BE252651646F7700881000D4 /* WatchStampsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215FADADA57990B09B8654D3 /* WatchStampsView.swift */; };
+		BEDAAD53821679A60598C404 /* AdaptiveLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08489FB23E3FC4F3B14FF068 /* AdaptiveLayout.swift */; };
 		C398ED26AA22EE7CC042CFB1 /* HealthLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69C07FE6B940E81BBB83F6B /* HealthLogger.swift */; };
 		C3F135414F9A95DA8CD9B2F2 /* BlendData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2886C48D4C0E2624A976710 /* BlendData.swift */; };
 		C9CC30D0AFF0E2E264B995DA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 89AAEB7BC336B40CE69167A9 /* Assets.xcassets */; };
@@ -67,6 +68,7 @@
 		D2AACB23A3BD23C838E6EDB9 /* ProductsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F403E0E68746CF530C0FB5 /* ProductsView.swift */; };
 		DB2E6D43771EA0D8689B50B0 /* StampCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4947CF5B1AE6A7A2DE250A34 /* StampCard.swift */; };
 		DB799C47D00D6971DBA9A6DB /* SharedKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1490232CD3D932313A03A078 /* SharedKeys.swift */; };
+		DD24E020A0A741794502EAB9 /* StampWebSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4BE771F0BD099C9CE320621 /* StampWebSync.swift */; };
 		DD9DCDCA2AE037D851DCAF0E /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 62EE2C940E45E57F929F95BB /* logo.png */; };
 		E5F30D41496B4D69C3AD862C /* BlendData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2886C48D4C0E2624A976710 /* BlendData.swift */; };
 		E82B1F3EF9D6EB3AE20F3EAD /* wwdr.pem in Resources */ = {isa = PBXBuildFile; fileRef = 7826C0EB18B0D98DBD16D3B6 /* wwdr.pem */; };
@@ -129,6 +131,7 @@
 /* Begin PBXFileReference section */
 		0462AC5293C299B58AC985AF /* OrderViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderViews.swift; sourceTree = "<group>"; };
 		06836A41C06DC96A53F936D9 /* BugWalletApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BugWalletApp.swift; sourceTree = "<group>"; };
+		08489FB23E3FC4F3B14FF068 /* AdaptiveLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveLayout.swift; sourceTree = "<group>"; };
 		0D5BA412D4F7A5D40A264589 /* LocalPassCreation.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = LocalPassCreation.xcconfig; sourceTree = "<group>"; };
 		0E61ABD15966188F3F4A7304 /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
 		0FEBB74914D5B11C74025ACA /* logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo@2x.png"; sourceTree = "<group>"; };
@@ -168,6 +171,7 @@
 		BA9C81F98701751ADB22DF6F /* WatchSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchSync.swift; sourceTree = "<group>"; };
 		BEA8406AA02A4A68FD41C4D3 /* CoffeeMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoffeeMenu.swift; sourceTree = "<group>"; };
 		BF23FF5ABB3858923F058305 /* passcert.pem */ = {isa = PBXFileReference; path = passcert.pem; sourceTree = "<group>"; };
+		C4BE771F0BD099C9CE320621 /* StampWebSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StampWebSync.swift; sourceTree = "<group>"; };
 		CABF77E9C7D18D20D0B624B3 /* Zip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Zip.swift; sourceTree = "<group>"; };
 		CC773418C49407A4095940FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D69C07FE6B940E81BBB83F6B /* HealthLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthLogger.swift; sourceTree = "<group>"; };
@@ -196,6 +200,7 @@
 		058BDE8FA369C2F214287A01 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				08489FB23E3FC4F3B14FF068 /* AdaptiveLayout.swift */,
 				06836A41C06DC96A53F936D9 /* BugWalletApp.swift */,
 				49C223AFFA87AC9812C4BD86 /* CardView.swift */,
 				62DB7B6432C91390C15C64A9 /* FirebaseAuth.swift */,
@@ -207,6 +212,7 @@
 				7C101EA94CD6EC089F5B733B /* PkPassZip.swift */,
 				44F403E0E68746CF530C0FB5 /* ProductsView.swift */,
 				E28646CAABF7DA62BF7AD38C /* QRGenerator.swift */,
+				C4BE771F0BD099C9CE320621 /* StampWebSync.swift */,
 				BA9C81F98701751ADB22DF6F /* WatchSync.swift */,
 				CABF77E9C7D18D20D0B624B3 /* Zip.swift */,
 			);
@@ -594,6 +600,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BEDAAD53821679A60598C404 /* AdaptiveLayout.swift in Sources */,
 				166D8694FEA95DE66689E7EC /* BeanLink.swift in Sources */,
 				E5F30D41496B4D69C3AD862C /* BlendData.swift in Sources */,
 				0BDCF309F3300AA55168F000 /* BlendFinder.swift in Sources */,
@@ -612,6 +619,7 @@
 				FAF41A2F1F6CF6DB20760103 /* QRGenerator.swift in Sources */,
 				FE7333C8C360C3663F7BFED9 /* SharedKeys.swift in Sources */,
 				B85D586B9B0E615F72A447DE /* StampCard.swift in Sources */,
+				DD24E020A0A741794502EAB9 /* StampWebSync.swift in Sources */,
 				B55856637FF62E2B0328858D /* WatchSync.swift in Sources */,
 				588FA7FCDE85E9D07BE6C96A /* Zip.swift in Sources */,
 			);
@@ -805,6 +813,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.zerogravityroom.bugwallet.watchkitapp;
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 9.0;
@@ -992,6 +1001,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.zerogravityroom.bugwallet.watchkitapp;
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 9.0;
@@ -1050,6 +1060,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.zerogravityroom.bugwallet.watchkitapp;
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 9.0;

@@ -4,10 +4,15 @@ import SwiftUI
 /// below. Tapping the star marks a favorite; favorites float to the top of
 /// their section and, through the App Group, also on top of the iMessage
 /// app's menu.
+///
+/// It's a split view, so on a regular-width screen (iPhone Duo's inner
+/// display, iPad) the list and the selected bean's page sit side by side,
+/// while on compact width (the outer display, other iPhones) it collapses to
+/// the usual push.
 struct ProductsView: View {
-    /// The pushed bean pages, by bean id. Owned by RootView so an incoming
+    /// The open bean page, by bean id. Owned by RootView so an incoming
     /// `bugcoffee://bean/<id>` link can open one directly.
-    @Binding var beanPath: [String]
+    @Binding var selectedBean: String?
 
     @State private var favorites = FavoritesStore.ids
     @State private var showBlendFinder = false
@@ -18,20 +23,10 @@ struct ProductsView: View {
     private let accent = Color(red: 204/255, green: 30/255, blue: 65/255)
 
     var body: some View {
-        NavigationStack(path: $beanPath) {
-            List {
+        NavigationSplitView {
+            List(selection: $selectedBean) {
                 section("Drinks", items: CoffeeMenu.drinks)
                 section("Coffee beans", items: CoffeeMenu.beans)
-            }
-            .navigationDestination(for: String.self) { id in
-                if let item = CoffeeMenu.byID[id] {
-                    BeanDetailView(item: item,
-                                   isFavorite: favoriteBinding(item),
-                                   accent: accent) {
-                        // A cup was logged or removed — the row's average moved.
-                        journal = BlendJournal.all
-                    }
-                }
             }
             .navigationTitle("Products")
             .toolbar {
@@ -49,10 +44,41 @@ struct ProductsView: View {
                     }
                 }
             }
+        } detail: {
+            if let id = selectedBean, let item = CoffeeMenu.byID[id] {
+                BeanDetailView(item: item,
+                               isFavorite: favoriteBinding(item),
+                               accent: accent) {
+                    // A cup was logged or removed — the row's average moved.
+                    journal = BlendJournal.all
+                }
+                // One page per bean: BeanDetailView reads its diary into @State
+                // once, so reusing the view would show the previous bean's cups.
+                .id(id)
+            } else {
+                noSelection
+            }
         }
+        // Keep the list next to the page on the inner display instead of
+        // sliding it over the page.
+        .navigationSplitViewStyle(.balanced)
         // Pick up stars toggled elsewhere (e.g. in the iMessage app) whenever
         // the tab comes back on screen.
         .onAppear { favorites = FavoritesStore.ids }
+    }
+
+    /// The detail column before a bean is picked (regular width only).
+    private var noSelection: some View {
+        VStack(spacing: 8) {
+            Image(systemName: "cup.and.saucer")
+                .font(.largeTitle)
+                .foregroundStyle(accent)
+            Text("Pick a bean to see its tasting notes and your diary.")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+        }
+        .padding()
     }
 
     private func section(_ title: String, items: [MenuItem]) -> some View {
@@ -183,16 +209,13 @@ struct BeanDetailView: View {
             // Hands out this bean's deep link, so a tap in Messages or Notes
             // reopens the app straight on this page.
             if let link = BeanLink.url(for: item) {
-                ShareLink(item: link,
-                          subject: Text(item.name),
-                          message: Text(BlendInfo.byID[item.id]?.tastingNotes ?? ""))
+                ToolbarItem {
+                    ShareLink(item: link,
+                              subject: Text(item.name),
+                              message: Text(BlendInfo.byID[item.id]?.tastingNotes ?? ""))
+                }
             }
-            Button {
-                isFavorite.toggle()
-            } label: {
-                Image(systemName: isFavorite ? "star.fill" : "star")
-                    .foregroundStyle(isFavorite ? accent : Color.secondary)
-            }
+            favoriteItem
         }
         .sheet(item: $editing) { tasting in
             TastingEditor(tasting: tasting, beanName: item.name, accent: accent) { saved in
@@ -205,6 +228,34 @@ struct BeanDetailView: View {
                 entry = BlendJournal.entry(for: item.id)
                 onDiaryChange()
             }
+        }
+    }
+
+    /// The star shows status, so on iOS 27 it's the last item to overflow when
+    /// iPhone Duo's vertical bar runs out of room (Share goes first).
+    @ToolbarContentBuilder
+    private var favoriteItem: some ToolbarContent {
+        #if compiler(>=6.4) // iOS 27 SDK (Xcode 27); drop the guard once Xcode 26 is gone
+        if #available(iOS 27, *) {
+            ToolbarItem { favoriteButton }
+                .visibilityPriority(.high)
+        } else {
+            ToolbarItem { favoriteButton }
+        }
+        #else
+        ToolbarItem { favoriteButton }
+        #endif
+    }
+
+    /// Titled as well as drawn: the bar shows the symbol, and the overflow
+    /// menu shows the title.
+    private var favoriteButton: some View {
+        Button {
+            isFavorite.toggle()
+        } label: {
+            Label(isFavorite ? "Remove from favorites" : "Add to favorites",
+                  systemImage: isFavorite ? "star.fill" : "star")
+                .foregroundStyle(isFavorite ? accent : Color.secondary)
         }
     }
 }
@@ -329,19 +380,35 @@ private struct TastingEditor: View {
             }
             .navigationTitle(beanName)
             .navigationBarTitleDisplayMode(.inline)
+            // Titles and symbols on both: a vertical bar shows the symbols.
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }
+                    Button {
+                        dismiss()
+                    } label: {
+                        Label("Cancel", systemImage: "xmark")
+                    }
                 }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") {
+                ToolbarItem(placement: savePlacement) {
+                    Button {
                         onSave(tasting)
                         dismiss()
+                    } label: {
+                        Label("Save", systemImage: "checkmark")
                     }
                     .disabled(tasting.isEmpty)
                 }
             }
         }
+    }
+
+    /// On iOS 27 Save is pinned as the sheet's main action, so a vertical bar
+    /// lists it right after Cancel — close first, then the main action.
+    private var savePlacement: ToolbarItemPlacement {
+        #if compiler(>=6.4) // iOS 27 SDK (Xcode 27); drop the guard once Xcode 26 is gone
+        if #available(iOS 27, *) { return .topBarPinnedTrailing }
+        #endif
+        return .confirmationAction
     }
 }
 

@@ -50,6 +50,10 @@ final class QRScannerController: UIViewController, AVCaptureMetadataOutputObject
     private let sessionQueue = DispatchQueue(label: "com.zerogravityroom.bugwallet.scanner")
     private var previewLayer: AVCaptureVideoPreviewLayer?
     private var didScan = false
+    // Keeps the preview upright (iOS 17+). An AVCaptureDevice.RotationCoordinator,
+    // typed as NSObject because a stored property can't be iOS 17-only.
+    private var rotationCoordinator: NSObject?
+    private var rotationObservation: NSKeyValueObservation?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,6 +78,15 @@ final class QRScannerController: UIViewController, AVCaptureMetadataOutputObject
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         previewLayer?.frame = view.layer.bounds
+        // TODO(iPhone Duo, iOS 27.1 SDK): the close button and hint are placed by
+        // hand. The safe area should keep them clear of the outer display's
+        // corner camera, but once `reservedRegions(kind:)` ships (it's not in the
+        // iOS 27.0 SDK), check against the camera itself and, on the inner
+        // display, the fold:
+        //
+        //     let camera = view.reservedRegions(kind: .occlusion).map(\.frame)
+        //     let fold = view.reservedRegions(kind: .division).map(\.frame)
+        //     // …then move the close button and hint off anything in camera + fold.
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -106,9 +119,32 @@ final class QRScannerController: UIViewController, AVCaptureMetadataOutputObject
         preview.frame = view.layer.bounds
         view.layer.insertSublayer(preview, at: 0)
         previewLayer = preview
+        if #available(iOS 17, *) {
+            keepUpright(preview, for: device)
+        }
 
         // startRunning blocks; keep it off the main thread.
         sessionQueue.async { [session] in session.startRunning() }
+    }
+
+    /// The app is portrait-only, but iPhone Duo's inner display ignores that
+    /// and can show the scanner in landscape. The rotation coordinator reports
+    /// the angle that keeps the preview level with the horizon — and follows
+    /// the app between the two displays — so apply each new angle.
+    @available(iOS 17, *)
+    private func keepUpright(_ preview: AVCaptureVideoPreviewLayer, for device: AVCaptureDevice) {
+        let coordinator = AVCaptureDevice.RotationCoordinator(device: device, previewLayer: preview)
+        rotationCoordinator = coordinator
+        rotationObservation = coordinator.observe(
+            \.videoRotationAngleForHorizonLevelPreview, options: [.initial, .new]
+        ) { [weak preview] coordinator, _ in
+            let angle = coordinator.videoRotationAngleForHorizonLevelPreview
+            DispatchQueue.main.async {
+                guard let connection = preview?.connection,
+                      connection.isVideoRotationAngleSupported(angle) else { return }
+                connection.videoRotationAngle = angle
+            }
+        }
     }
 
     func metadataOutput(_ output: AVCaptureMetadataOutput,
@@ -126,6 +162,8 @@ final class QRScannerController: UIViewController, AVCaptureMetadataOutputObject
     }
 
     // MARK: - Chrome
+    // Every edge is pinned to the safe area on its own: iPhone Duo's insets are
+    // often uneven (a side camera, a vertical bar, Split View).
 
     private func addCloseButton() {
         let button = UIButton(type: .system)
@@ -136,7 +174,7 @@ final class QRScannerController: UIViewController, AVCaptureMetadataOutputObject
         view.addSubview(button)
         NSLayoutConstraint.activate([
             button.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12),
-            button.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            button.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
             button.widthAnchor.constraint(equalToConstant: 36),
             button.heightAnchor.constraint(equalToConstant: 36)
         ])
@@ -152,8 +190,8 @@ final class QRScannerController: UIViewController, AVCaptureMetadataOutputObject
         label.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(label)
         NSLayoutConstraint.activate([
-            label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-            label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
+            label.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 24),
+            label.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24),
             label.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -32)
         ])
     }
@@ -168,9 +206,9 @@ final class QRScannerController: UIViewController, AVCaptureMetadataOutputObject
         label.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(label)
         NSLayoutConstraint.activate([
-            label.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-            label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32)
+            label.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
+            label.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 32),
+            label.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -32)
         ])
     }
 }

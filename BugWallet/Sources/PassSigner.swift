@@ -45,6 +45,12 @@ enum PassSigner {
     }
 
     /// Detached CMS signature (DER) over the pass manifest.
+    ///
+    /// `signingTime` is required: without it swift-certificates emits a bare
+    /// signature with no signed attributes, and PassKit rejects the pass with
+    /// "Signature must contain a signing date". With it the signature carries
+    /// contentType + messageDigest + signingTime, matching `openssl smime -sign`
+    /// (Scripts/make_pkpass.sh).
     static func sign(manifest: Data, assets: Assets) throws -> Data {
         let signature = try CMS.sign(
             manifest,
@@ -52,6 +58,7 @@ enum PassSigner {
             additionalIntermediateCertificates: [assets.intermediate],
             certificate: assets.certificate,
             privateKey: assets.privateKey,
+            signingTime: Date(),
             detached: true
         )
         return Data(signature)

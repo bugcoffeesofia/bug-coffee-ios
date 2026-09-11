@@ -32,12 +32,16 @@ final class Session: ObservableObject {
             let email = defaults.string(forKey: SharedKeys.defaultsEmail) ?? ""
             
             // Restore the previous session so a returning user goes straight to
-            // their card. The card only needs the UID/email (the QR, header and
-            // Wallet pass are built from those); the auth tokens aren't used
-            // anywhere, so no re-login is required. Setting `account` inside
-            // init does not trigger `didSet`, hence the manual watch sync below.
-            account = Account(uid: uid, email: email, idToken: "", refreshToken: "")
+            // their card. The card needs the UID/email (the QR, header and
+            // Wallet pass are built from those); the refresh token, if we saved
+            // one, lets StampWebSync seed a logged-in web session to read the
+            // live stamp count. Setting `account` inside init does not trigger
+            // `didSet`, hence the manual watch sync + web-sync start below.
+            let refresh = defaults.string(forKey: SharedKeys.defaultsRefresh) ?? ""
+            let restored = Account(uid: uid, email: email, idToken: "", refreshToken: refresh)
+            account = restored
             WatchSync.shared.sync(uid: uid, email: email)
+            StampWebSync.shared.start(account: restored)
         }
     }
 
@@ -45,10 +49,12 @@ final class Session: ObservableObject {
 
     func signOut() {
         account = nil
+        StampWebSync.shared.stop()
         // Forget the persisted identity so the next launch shows the login screen.
         let defaults = UserDefaults.standard
         defaults.removeObject(forKey: SharedKeys.defaultsUID)
         defaults.removeObject(forKey: SharedKeys.defaultsEmail)
+        defaults.removeObject(forKey: SharedKeys.defaultsRefresh)
     }
 
     private func persistAndSync() {
@@ -56,7 +62,10 @@ final class Session: ObservableObject {
         let defaults = UserDefaults.standard
         defaults.set(account.uid, forKey: SharedKeys.defaultsUID)
         defaults.set(account.email, forKey: SharedKeys.defaultsEmail)
+        defaults.set(account.refreshToken, forKey: SharedKeys.defaultsRefresh)
         WatchSync.shared.sync(uid: account.uid, email: account.email)
+        // Kick off the App Check WebView to read the live stamp count.
+        StampWebSync.shared.start(account: account)
     }
 }
 
@@ -66,20 +75,23 @@ struct RootView: View {
     private enum Tab { case card, products }
 
     @State private var tab = Tab.card
-    /// The bean pages stacked on the Products tab, by bean id. Held here rather
-    /// than inside ProductsView so a `bugcoffee://bean/<id>` link can push one
+    /// The bean page open on the Products tab, by bean id. Held here rather
+    /// than inside ProductsView so a `bugcoffee://bean/<id>` link can open one
     /// without a tap — including while the login screen is still up, since the
-    /// stack reads this path the moment it appears.
-    @State private var beanPath: [String] = []
+    /// split view reads this selection the moment it appears.
+    @State private var selectedBean: String?
 
     var body: some View {
         Group {
             if let account = session.account {
+                // No tab sidebar on iPhone Duo's inner display
+                // (`.defaultTabBarPlacement(.sidebar)`, iOS 27): two tabs don't
+                // need one, and Products already has a sidebar of its own.
                 TabView(selection: $tab) {
                     CardView(account: account)
                         .tabItem { Label("Card", systemImage: "qrcode") }
                         .tag(Tab.card)
-                    ProductsView(beanPath: $beanPath)
+                    ProductsView(selectedBean: $selectedBean)
                         .tabItem { Label("Products", systemImage: "cup.and.saucer.fill") }
                         .tag(Tab.products)
                 }
@@ -92,7 +104,7 @@ struct RootView: View {
             // ignored — better to land on the card than on an empty page.
             guard let bean = BeanLink.bean(from: url) else { return }
             tab = .products
-            beanPath = [bean.id]
+            selectedBean = bean.id
         }
     }
 }
