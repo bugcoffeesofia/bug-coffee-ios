@@ -98,7 +98,7 @@ else
     "secondaryFields": [$NAME_FIELD{ "key": "member", "label": "ЧЛЕН", "value": "$EMAIL" }]
   },
   "barcodes": [{ "format": "PKBarcodeFormatQR", "message": "$UID_ARG", "messageEncoding": "iso-8859-1" }],
-  "locations": [{ "latitude": 42.693229, "longitude": 23.344093, "relevantText": "Bug Coffee е наблизо" }],
+  "locations": [{ "latitude": 42.69323, "longitude": 23.34402, "maxDistance": 15, "relevantText": "Bug Coffee е наблизо" }],
   "backgroundColor": "rgb(31, 4, 9)",
   "foregroundColor": "rgb(255, 255, 255)",
   "labelColor": "rgb(204, 30, 65)"

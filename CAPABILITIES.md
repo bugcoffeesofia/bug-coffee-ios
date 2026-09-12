@@ -1,5 +1,11 @@
 # Bug Coffee — App Capabilities Specification
 
+> **Superseded by [`docs/`](docs/README.md).** This file is the original Android-only
+> overview; the maintained, platform-neutral specification (and everything added since —
+> the live stamp-count sync, the watch app's extra screens, bean deep links, the pass's
+> location relevance, build instructions and acceptance tests) lives in `docs/`. Kept here
+> for its Android mapping notes.
+
 > **Purpose:** A complete, platform-neutral description of what the Bug Coffee iOS
 > app does, so the same product can be rebuilt on Android. This documents
 > *behavior, data, and integrations* — not Swift/SwiftUI implementation details.
@@ -198,6 +204,7 @@ scannable loyalty card in the platform wallet), not the .pkpass mechanics.
 | Primary field | label "ПЕЧАТИ" (Bulgarian "stamps"), value "0 / 9" *(static in the pass; live count isn't wired)* |
 | Secondary field | label "ЧЛЕН" ("member"), value = account email |
 | **Barcode** | **QR**, message = account UID, encoding iso-8859-1 |
+| **Location** | 42.69323° N, 23.34402° E — shop geofence, 15 m radius (`maxDistance`); surfaces the pass on the Lock Screen nearby, relevant text "Bug Coffee е наблизо" (Google Wallet: `locations` on the loyalty object) |
 | Background color | `#1F0409` |
 | Foreground color | `#FFFFFF` |
 | Label color | `#CC1E41` |

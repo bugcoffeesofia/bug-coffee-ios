@@ -10,6 +10,14 @@ App Check-gated, so login works natively with only the public API key (doc §4.1
 The live stamp count *is* behind App Check and is intentionally out of scope for
 this simple app (doc §7).
 
+## Porting it to other platforms
+
+[`docs/`](docs/README.md) is the platform-neutral specification of this app — behavior, data,
+protocols and integrations — written so the same product can be rebuilt on Android, Wear OS,
+Flutter/KMP or the web without reading Swift. Start at [`docs/README.md`](docs/README.md); it
+carries the porting order and the parity checklist. (`CAPABILITIES.md` is the older
+Android-only overview it grew out of.)
+
 ## What it does
 
 1. **Login** — email/password against Google Identity Toolkit (same credentials as

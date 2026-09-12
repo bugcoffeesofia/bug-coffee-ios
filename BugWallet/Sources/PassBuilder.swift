@@ -17,6 +17,14 @@ enum PassConfig {
     static let backgroundColor = "rgb(31, 4, 9)"     // #1F0409 darkBrown
     static let foregroundColor = "rgb(255, 255, 255)"
     static let labelColor = "rgb(204, 30, 65)"       // #CC1E41 accent red
+
+    // The shop's coordinates. A pass carrying `locations` surfaces on the Lock
+    // Screen when the holder is nearby, which is the whole point of a store card.
+    static let latitude = 42.69323
+    static let longitude = 23.34402
+    static let locationRelevantText = "Bug Coffee е наблизо"
+    /// Geofence radius in metres for the location relevance above.
+    static let locationMaxDistance = 15
 }
 
 /// Assembles an Apple Wallet `storeCard` pass for a signed-in account.
@@ -60,6 +68,15 @@ enum PassBuilder {
                     "format": "PKBarcodeFormatQR",
                     "message": account.uid,
                     "messageEncoding": "iso-8859-1"
+                ]
+            ],
+            // Lock Screen relevance when the holder is near the shop.
+            "locations": [
+                [
+                    "latitude": PassConfig.latitude,
+                    "longitude": PassConfig.longitude,
+                    "relevantText": PassConfig.locationRelevantText,
+                    "maxDistance": PassConfig.locationMaxDistance
                 ]
             ],
             "backgroundColor": PassConfig.backgroundColor,
