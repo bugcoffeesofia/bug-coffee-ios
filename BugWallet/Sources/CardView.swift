@@ -1,5 +1,57 @@
 import SwiftUI
 import PassKit
+import Combine
+
+/// The card's stamp counter and "Log a coffee" state, kept out of the view so
+/// it can be unit tested.
+@MainActor
+final class CardModel: ObservableObject {
+    /// The manually tracked count. Every change is written to the App Group
+    /// (→ widget) and pushed to the watch.
+    @Published var stamps: Int {
+        didSet {
+            guard stamps != oldValue else { return }
+            StampStore.setCount(stamps)
+            WatchSync.shared.syncStamps(stamps)
+        }
+    }
+    @Published private(set) var logResult: String?
+    @Published private(set) var isLogging = false
+
+    private let logDrink: (CoffeeDrink) async throws -> Void
+    private var liveCount: AnyCancellable?
+
+    init(stamps: Int? = nil,
+         webSync: StampWebSync? = nil,
+         logDrink: @escaping (CoffeeDrink) async throws -> Void = { try await HealthLogger.log($0) }) {
+        let webSync = webSync ?? .shared
+        self.stamps = stamps ?? StampStore.count
+        self.logDrink = logDrink
+        // The App Check WebView reads the live count from the backend (doc §7,
+        // variant 3). The backend is authoritative — adopt the live count when
+        // it arrives (this also overrides a stale manual value).
+        liveCount = webSync.$backendCount
+            .compactMap { $0 }
+            .sink { [weak self] live in self?.stamps = live }
+    }
+
+    func increment() { stamps = min(StampStore.maxStamps, stamps + 1) }
+    func decrement() { stamps = max(0, stamps - 1) }
+
+    /// Logs one drink to Apple Health as dietary caffeine.
+    func log(_ drink: CoffeeDrink) async {
+        guard !isLogging else { return }
+        isLogging = true
+        logResult = nil
+        defer { isLogging = false }
+        do {
+            try await logDrink(drink)
+            logResult = "\(drink.name) logged to Health ☕️"
+        } catch {
+            logResult = error.localizedDescription
+        }
+    }
+}
 
 struct CardView: View {
     let account: Account
@@ -9,6 +61,9 @@ struct CardView: View {
     // regular on the Duo's inner display (and iPad), which gets the two-half
     // layout.
     @Environment(\.horizontalSizeClass) private var widthClass
+    /// How far the outer display's front camera reaches into the top edge.
+    /// Stays 0 unless the safe area leaves it in the header's way (iOS 27.1+).
+    @State private var cameraInset: CGFloat = 0
 
     // Local (on-device) pass creation state — only compiled into the
     // Debug-LocalPass config (BugWallet-LocalPass scheme). See
@@ -36,13 +91,19 @@ struct CardView: View {
     @State private var isNamePromptPresented = false
     #endif
 
-    @State private var logResult: String?
-    @State private var isLogging = false
+    @StateObject private var model: CardModel
+    // Observed for the live-sync status line; CardModel folds the backend
+    // count itself into the displayed stamps.
+    @ObservedObject private var webSync: StampWebSync
 
-    @State private var stamps = StampStore.count
-    // The App Check WebView reads the live count from the backend (doc §7,
-    // variant 3) and publishes it here; we fold it into the displayed count.
-    @ObservedObject private var webSync = StampWebSync.shared
+    /// `webSync` and `model` are seams for tests; the app uses the shared
+    /// web sync and lets the view make its own model.
+    init(account: Account, webSync: StampWebSync? = nil, model: CardModel? = nil) {
+        let webSync = webSync ?? .shared
+        self.account = account
+        self.webSync = webSync
+        _model = StateObject(wrappedValue: model ?? CardModel(webSync: webSync))
+    }
 
     private let brand = Color(red: 31/255, green: 4/255, blue: 9/255)
     private let accent = Color(red: 204/255, green: 30/255, blue: 65/255)
@@ -50,26 +111,15 @@ struct CardView: View {
     var body: some View {
         ZStack {
             brand.ignoresSafeArea()
-            FittingScrollView { size in
-                if widthClass == .regular {
-                    regularLayout(isWide: size.width > size.height)
-                } else {
-                    compactLayout
-                }
-            }
+            layoutRoot
         }
+        // The front camera sits in a corner of the outer display. Measured on
+        // the root, which — unlike the header itself — doesn't move once the
+        // header pads itself clear of it.
+        .onCameraOcclusionChange { cameraInset = $0 }
         // Everything from here down hangs off the root rather than one of the
         // sections, so it survives the compact ⇄ regular switch when iPhone Duo
         // opens or closes: a scanner, alert or share sheet that's up stays up.
-        .onChange(of: stamps) {
-            StampStore.setCount($0)
-            WatchSync.shared.syncStamps($0)
-        }
-        .onReceive(webSync.$backendCount.compactMap { $0 }) { live in
-            // The backend is authoritative — adopt the live count when
-            // it arrives (this also overrides a stale manual value).
-            if live != stamps { stamps = live }
-        }
         #if LOCAL_PASS_CREATION
         .fullScreenCover(isPresented: $isScanning, onDismiss: {
             // Once the camera is gone, ask for the name to print on the pass.
@@ -116,6 +166,52 @@ struct CardView: View {
 
     // MARK: - Layouts
 
+    /// iOS 27.1 splits the inner display with an arrangement view; every
+    /// compact width, and every older release, uses the scrolling stack.
+    @ViewBuilder
+    private var layoutRoot: some View {
+        #if canImport(SwiftUI, _version: 8.0.85) // iOS 27.1 SDK (Xcode 27.1)
+        if #available(iOS 27.1, *), widthClass == .regular {
+            arrangedLayout
+        } else {
+            fittingLayout
+        }
+        #else
+        fittingLayout
+        #endif
+    }
+
+    private var fittingLayout: some View {
+        FittingScrollView { size in
+            if widthClass == .regular {
+                regularLayout(isWide: size.width > size.height)
+            } else {
+                compactLayout
+            }
+        }
+    }
+
+    #if canImport(SwiftUI, _version: 8.0.85) // iOS 27.1 SDK (Xcode 27.1)
+    /// The inner display: the QR in one half, the stamps and buttons in the
+    /// other. The arrangement splits at the fold itself — side by side when the
+    /// device is folded like a book, stacked when it's propped on a table — so
+    /// neither half lands on the crease. Each half scrolls on its own when it
+    /// has to; the arrangement itself must never sit inside a scroll view.
+    @available(iOS 27.1, *)
+    private var arrangedLayout: some View {
+        VStack(spacing: 20) {
+            header
+            ArrangementView {
+                FittingScrollView { _ in qrSection }
+            } secondary: {
+                FittingScrollView { _ in controlsSection }
+            }
+            .arrangementViewStyle(.split)
+            footer
+        }
+    }
+    #endif
+
     /// iPhones and the outer display: one column, spread out by spacers.
     private var compactLayout: some View {
         VStack(spacing: 20) {
@@ -130,24 +226,12 @@ struct CardView: View {
         }
     }
 
-    /// The inner display (and iPad): the QR gets one half and the stamps and
-    /// buttons the other — side by side when the space is wide, stacked when
-    /// it's tall, the same rule as ArrangementView's split style. That keeps
-    /// the fold between the halves instead of through the QR or a button.
+    /// The inner display before iOS 27.1, and iPad: the QR gets one half and
+    /// the stamps and buttons the other — side by side when the space is wide,
+    /// stacked when it's tall, the same rule the arrangement view applies. This
+    /// one splits the safe area rather than the fold, so it sits slightly off
+    /// the crease when the insets are uneven; `arrangedLayout` is exact.
     private func regularLayout(isWide: Bool) -> some View {
-        // TODO(iPhone Duo, iOS 27.1 SDK): replace the hand-rolled halves with an
-        // arrangement view once it ships (it's not in the iOS 27.0 SDK). The split
-        // style makes the same side-by-side / stacked choice but splits at the
-        // fold itself; these halves split the safe area, which is off-center when
-        // the insets are uneven. An arrangement view must not sit in a
-        // ScrollView, so take this layout out of FittingScrollView at the same time.
-        //
-        //     ArrangementView {
-        //         qrSection
-        //     } secondary: {
-        //         controlsSection
-        //     }
-        //     .arrangementViewStyle(.split)
         let halves = isWide ? AnyLayout(HStackLayout(spacing: 0))
                             : AnyLayout(VStackLayout(spacing: 0))
         return VStack(spacing: 20) {
@@ -165,19 +249,10 @@ struct CardView: View {
     // MARK: - Sections
 
     private var header: some View {
-        // TODO(iPhone Duo, iOS 27.1 SDK): this row is hand-placed along the top
-        // edge, near the outer display's front camera (a corner cut-out that
-        // grows into the Dynamic Island for Live Activities). Check it in Device
-        // Hub; if the camera crowds "Sign out", keep the row clear of it once
-        // `reservedRegions(kind:)` ships (it's not in the iOS 27.0 SDK):
-        //
-        //     @State private var cameraFrames: [CGRect] = []
-        //
-        //     .onGeometryChange(for: [CGRect].self) { proxy in
-        //         proxy.reservedRegions(kind: .occlusion).map(\.frame)
-        //     } action: { cameraFrames = $0 }
-        //     // …then pad the row past any frame it overlaps (confirm which
-        //     // coordinate space the frames use first).
+        // Hand-placed along the top edge, where the outer display's front
+        // camera sits in a corner and grows into the Dynamic Island for Live
+        // Activities. `cameraInset` pads the row past it on the rare layout
+        // where the safe area doesn't already.
         HStack {
             VStack(alignment: .leading) {
                 Text("Bug Coffee")
@@ -194,6 +269,7 @@ struct CardView: View {
         }
         .padding(.horizontal)
         .padding(.top)
+        .padding(.top, cameraInset)
     }
 
     private var qrSection: some View {
@@ -225,13 +301,13 @@ struct CardView: View {
                     .font(.subheadline.bold())
                     .foregroundStyle(.white)
                 Spacer()
-                Text("\(stamps) / \(StampStore.maxStamps)")
+                Text("\(model.stamps) / \(StampStore.maxStamps)")
                     .font(.subheadline.monospacedDigit())
                     .foregroundStyle(accent)
-                stepButton("minus.circle.fill") { stamps = max(0, stamps - 1) }
-                stepButton("plus.circle.fill") { stamps = min(StampStore.maxStamps, stamps + 1) }
+                stepButton("minus.circle.fill", action: model.decrement)
+                stepButton("plus.circle.fill", action: model.increment)
             }
-            StampCardView(count: stamps, slotSize: 34, spacing: 8)
+            StampCardView(count: model.stamps, slotSize: 34, spacing: 8)
             // Live-sync status (App Check WebView, doc §7 variant 3).
             Text("Backend: \(webSync.status)")
                 .font(.caption2.monospacedDigit())
@@ -256,11 +332,11 @@ struct CardView: View {
             Menu {
                 ForEach(CoffeeDrink.allCases) { drink in
                     Button("\(drink.name) · \(Int(drink.caffeineMilligrams)) mg") {
-                        logCoffee(drink)
+                        Task { await model.log(drink) }
                     }
                 }
             } label: {
-                Label(isLogging ? "Logging…" : "Log a coffee",
+                Label(model.isLogging ? "Logging…" : "Log a coffee",
                       systemImage: "cup.and.saucer.fill")
                     .font(.subheadline.bold())
                     .foregroundStyle(.white)
@@ -269,9 +345,9 @@ struct CardView: View {
                     .background(accent, in: RoundedRectangle(cornerRadius: 12))
             }
             .padding(.horizontal)
-            .disabled(isLogging)
+            .disabled(model.isLogging)
 
-            if let logResult {
+            if let logResult = model.logResult {
                 Text(logResult)
                     .font(.footnote)
                     .foregroundStyle(.white.opacity(0.8))
@@ -369,21 +445,6 @@ struct CardView: View {
             Image(systemName: symbol)
                 .font(.title3)
                 .foregroundStyle(accent)
-        }
-    }
-
-    private func logCoffee(_ drink: CoffeeDrink) {
-        guard !isLogging else { return }
-        isLogging = true
-        logResult = nil
-        Task {
-            defer { isLogging = false }
-            do {
-                try await HealthLogger.log(drink)
-                logResult = "\(drink.name) logged to Health ☕️"
-            } catch {
-                logResult = error.localizedDescription
-            }
         }
     }
 

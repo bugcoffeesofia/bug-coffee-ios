@@ -42,7 +42,8 @@ enum FirebaseAuth {
     /// Public Firebase Web config, safe to embed (doc §3).
     static let apiKey = "AIzaSyDjY4FROGGt9h4Q-V_3InC8Nv2sEeA-FxI"
 
-    static func signIn(email: String, password: String) async throws -> Account {
+    static func signIn(email: String, password: String,
+                       session: URLSession = .shared) async throws -> Account {
         let url = URL(string: "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=\(apiKey)")!
         var req = URLRequest(url: url)
         req.httpMethod = "POST"
@@ -55,7 +56,7 @@ enum FirebaseAuth {
 
         let data: Data, response: URLResponse
         do {
-            (data, response) = try await URLSession.shared.data(for: req)
+            (data, response) = try await session.data(for: req)
         } catch {
             throw AuthError.network(error)
         }

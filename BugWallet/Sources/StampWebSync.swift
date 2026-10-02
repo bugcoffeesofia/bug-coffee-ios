@@ -33,7 +33,10 @@ final class StampWebSync: NSObject, ObservableObject {
 
     private let projectId = "bug-coffee"
     private let apiKey = FirebaseAuth.apiKey
-    private let origin = "https://app.bugcoffee.com"
+    private let origin: String
+    private let urlSession: URLSession
+    /// Last word on the WebView configuration (after the defaults are set).
+    private let configure: ((WKWebViewConfiguration) -> Void)?
 
     private var webView: WKWebView?
     private var account: Account?
@@ -48,7 +51,16 @@ final class StampWebSync: NSObject, ObservableObject {
     private var appCheckToken: String?
     private var capturedIDToken: String?
 
-    private override init() { super.init() }
+    /// The parameters are seams for unit tests (a local page, a stubbed
+    /// Firestore, a throwaway data store); the app uses `shared`.
+    init(origin: String = "https://app.bugcoffee.com",
+         urlSession: URLSession = .shared,
+         configure: ((WKWebViewConfiguration) -> Void)? = nil) {
+        self.origin = origin
+        self.urlSession = urlSession
+        self.configure = configure
+        super.init()
+    }
 
     // MARK: - Public API
 
@@ -97,6 +109,7 @@ final class StampWebSync: NSObject, ObservableObject {
         // state) survive across launches; after the first run the page comes up
         // already authenticated.
         config.websiteDataStore = .default()
+        configure?(config)
 
         let web = WKWebView(frame: CGRect(x: 0, y: 0, width: 1, height: 1),
                             configuration: config)
@@ -119,7 +132,7 @@ final class StampWebSync: NSObject, ObservableObject {
         web.load(URLRequest(url: URL(string: "\(origin)/app")!))
     }
 
-    fileprivate func onSeeded() {
+    func onSeeded() {
         guard !didReloadForSeed else { return }
         didReloadForSeed = true
         status = "seeded — opening card…"
@@ -128,7 +141,7 @@ final class StampWebSync: NSObject, ObservableObject {
 
     // MARK: - Message handling from the page
 
-    fileprivate func onMessage(_ body: [String: Any]) {
+    func onMessage(_ body: [String: Any]) {
         switch body["type"] as? String {
         case "seeded":
             onSeeded()
@@ -175,7 +188,7 @@ final class StampWebSync: NSObject, ObservableObject {
         req.setValue(appCheck, forHTTPHeaderField: "X-Firebase-AppCheck")
 
         do {
-            let (data, resp) = try await URLSession.shared.data(for: req)
+            let (data, resp) = try await urlSession.data(for: req)
             let code = (resp as? HTTPURLResponse)?.statusCode ?? -1
             guard code == 200 else {
                 status = "native read \(code) — using web fallback"

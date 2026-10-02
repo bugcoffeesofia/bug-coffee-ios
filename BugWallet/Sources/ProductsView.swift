@@ -30,28 +30,21 @@ struct ProductsView: View {
             }
             .navigationTitle("Products")
             .toolbar {
-                Button {
-                    showBlendFinder = true
-                } label: {
+                Button { showBlendFinder = true } label: {
                     Label("Find my blend", systemImage: "wand.and.stars")
                 }
                 .tint(accent)
             }
             .sheet(isPresented: $showBlendFinder) {
-                BlendFinderView(pickLabel: "Add to favorites") { bean in
-                    if !favorites.contains(bean.id) {
-                        favorites = FavoritesStore.toggle(bean.id)
-                    }
-                }
+                BlendFinderView(pickLabel: "Add to favorites") { favorites = FavoritesStore.add($0.id) }
             }
         } detail: {
             if let id = selectedBean, let item = CoffeeMenu.byID[id] {
+                // A cup was logged or removed — the row's average moved.
                 BeanDetailView(item: item,
                                isFavorite: favoriteBinding(item),
-                               accent: accent) {
-                    // A cup was logged or removed — the row's average moved.
-                    journal = BlendJournal.all
-                }
+                               accent: accent,
+                               onDiaryChange: reloadJournal)
                 // One page per bean: BeanDetailView reads its diary into @State
                 // once, so reusing the view would show the previous bean's cups.
                 .id(id)
@@ -105,9 +98,62 @@ struct ProductsView: View {
         }
     }
 
+    private func reloadJournal() { journal = BlendJournal.all }
+
     private func favoriteBinding(_ item: MenuItem) -> Binding<Bool> {
         Binding(get: { favorites.contains(item.id) },
                 set: { _ in favorites = FavoritesStore.toggle(item.id) })
+    }
+}
+
+/// One bean's diary as its page edits it: the cups, the one open in the editor,
+/// and the journal writes behind adding, editing and deleting a cup.
+@MainActor
+final class DiaryModel: ObservableObject {
+    let beanID: String
+    @Published private(set) var entry: BlendEntry
+    /// Non-nil while the editor sheet is up — a new cup or one being revisited.
+    @Published var editing: TastingEntry?
+    /// Lets the products list refresh the average it shows on this bean's row.
+    private let onChange: () -> Void
+
+    init(beanID: String, editing: TastingEntry? = nil, onChange: @escaping () -> Void = {}) {
+        self.beanID = beanID
+        self.entry = BlendJournal.entry(for: beanID)
+        self.editing = editing
+        self.onChange = onChange
+    }
+
+    /// "5 cups", or "5 cups · 4 rated" when some were logged without stars.
+    var cupCount: String {
+        let total = entry.entries.count
+        let label = "\(total) cup\(total == 1 ? "" : "s")"
+        return entry.ratedCount == total ? label : "\(label) · \(entry.ratedCount) rated"
+    }
+
+    func addCup() { editing = TastingEntry() }
+
+    func delete(at offsets: IndexSet) {
+        for index in offsets {
+            BlendJournal.delete(entry.entries[index].id, for: beanID)
+        }
+        reload()
+    }
+
+    /// Saves an edited cup. An entry the user opened and left blank isn't
+    /// worth keeping.
+    func commit(_ tasting: TastingEntry) {
+        if tasting.isEmpty {
+            BlendJournal.delete(tasting.id, for: beanID)
+        } else {
+            BlendJournal.save(tasting, for: beanID)
+        }
+        reload()
+    }
+
+    private func reload() {
+        entry = BlendJournal.entry(for: beanID)
+        onChange()
     }
 }
 
@@ -119,27 +165,19 @@ struct BeanDetailView: View {
     let item: MenuItem
     @Binding var isFavorite: Bool
     let accent: Color
-    /// Lets the products list refresh the average it shows on this bean's row.
-    let onDiaryChange: () -> Void
 
-    @State private var entry: BlendEntry
-    /// Non-nil while the editor sheet is up — a new cup or one being revisited.
-    @State private var editing: TastingEntry?
+    @StateObject private var diary: DiaryModel
+    private var entry: BlendEntry { diary.entry }
 
+    /// `onDiaryChange` runs after a cup is saved or deleted. `diary` is a seam
+    /// for tests; by default the page reads the bean's journal itself.
     init(item: MenuItem, isFavorite: Binding<Bool>, accent: Color,
-         onDiaryChange: @escaping () -> Void = {}) {
+         onDiaryChange: @escaping () -> Void = {},
+         diary: DiaryModel? = nil) {
         self.item = item
         self._isFavorite = isFavorite
         self.accent = accent
-        self.onDiaryChange = onDiaryChange
-        self._entry = State(initialValue: BlendJournal.entry(for: item.id))
-    }
-
-    /// "5 cups", or "5 cups · 4 rated" when some were logged without stars.
-    private var cupCount: String {
-        let total = entry.entries.count
-        let label = "\(total) cup\(total == 1 ? "" : "s")"
-        return entry.ratedCount == total ? label : "\(label) · \(entry.ratedCount) rated"
+        self._diary = StateObject(wrappedValue: diary ?? DiaryModel(beanID: item.id, onChange: onDiaryChange))
     }
 
     var body: some View {
@@ -171,7 +209,7 @@ struct BeanDetailView: View {
                             .foregroundStyle(accent)
                         StarRow(rating: entry.rating, accent: accent)
                         Spacer()
-                        Text(cupCount)
+                        Text(diary.cupCount)
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
@@ -180,24 +218,14 @@ struct BeanDetailView: View {
 
             Section("Diary") {
                 ForEach(entry.entries) { tasting in
-                    Button {
-                        editing = tasting
-                    } label: {
+                    Button { diary.editing = tasting } label: {
                         TastingRow(tasting: tasting, accent: accent)
                     }
                     .buttonStyle(.plain)
                 }
-                .onDelete { offsets in
-                    for index in offsets {
-                        BlendJournal.delete(entry.entries[index].id, for: item.id)
-                    }
-                    entry = BlendJournal.entry(for: item.id)
-                    onDiaryChange()
-                }
+                .onDelete(perform: diary.delete)
 
-                Button {
-                    editing = TastingEntry()
-                } label: {
+                Button(action: diary.addCup) {
                     Label("Add a cup", systemImage: "plus.circle.fill")
                 }
                 .tint(accent)
@@ -217,17 +245,8 @@ struct BeanDetailView: View {
             }
             favoriteItem
         }
-        .sheet(item: $editing) { tasting in
-            TastingEditor(tasting: tasting, beanName: item.name, accent: accent) { saved in
-                // An entry the user opened and left blank isn't worth keeping.
-                if saved.isEmpty {
-                    BlendJournal.delete(saved.id, for: item.id)
-                } else {
-                    BlendJournal.save(saved, for: item.id)
-                }
-                entry = BlendJournal.entry(for: item.id)
-                onDiaryChange()
-            }
+        .sheet(item: $diary.editing) { tasting in
+            TastingEditor(tasting: tasting, beanName: item.name, accent: accent, onSave: diary.commit)
         }
     }
 
@@ -250,9 +269,7 @@ struct BeanDetailView: View {
     /// Titled as well as drawn: the bar shows the symbol, and the overflow
     /// menu shows the title.
     private var favoriteButton: some View {
-        Button {
-            isFavorite.toggle()
-        } label: {
+        Button { isFavorite.toggle() } label: {
             Label(isFavorite ? "Remove from favorites" : "Add to favorites",
                   systemImage: isFavorite ? "star.fill" : "star")
                 .foregroundStyle(isFavorite ? accent : Color.secondary)
@@ -261,7 +278,7 @@ struct BeanDetailView: View {
 }
 
 /// One line in a bean's diary: when, how, where, and what you thought.
-private struct TastingRow: View {
+struct TastingRow: View {
     let tasting: TastingEntry
     let accent: Color
 
@@ -293,7 +310,7 @@ private struct TastingRow: View {
     }
 }
 
-private struct StarRow: View {
+struct StarRow: View {
     let rating: Int
     let accent: Color
     var size: Font = .subheadline
@@ -307,7 +324,7 @@ private struct StarRow: View {
 }
 
 /// The add/edit sheet for a single cup.
-private struct TastingEditor: View {
+struct TastingEditor: View {
     @State private var tasting: TastingEntry
     let beanName: String
     let accent: Color
@@ -329,10 +346,8 @@ private struct TastingEditor: View {
                 Section("How was it?") {
                     HStack(spacing: 8) {
                         ForEach(1...5, id: \.self) { star in
-                            Button {
-                                // Tapping the current rating clears it.
-                                tasting.rating = tasting.rating == star ? 0 : star
-                            } label: {
+                            // Tapping the current rating clears it.
+                            Button { tasting.tapStar(star) } label: {
                                 Image(systemName: star <= tasting.rating ? "star.fill" : "star")
                                     .font(.title2)
                                     .foregroundStyle(star <= tasting.rating ? accent : Color.secondary.opacity(0.4))
@@ -412,7 +427,7 @@ private struct TastingEditor: View {
     }
 }
 
-private struct ProductRow: View {
+struct ProductRow: View {
     let item: MenuItem
     let isFavorite: Bool
     /// Empty for drinks and for beans you haven't logged a cup of yet.

@@ -25,4 +25,9 @@ enum SharedKeys {
     static let defaultsStamps = "bug-coffee.stamps"
     static let defaultsFavorites = "bug-coffee.favorites"
     static let defaultsBlendJournal = "bug-coffee.blend-journal"
+
+    /// The App Group defaults behind StampStore, FavoritesStore and
+    /// BlendJournal. A `var` so unit tests can swap in a scratch suite instead
+    /// of touching the simulator's real stamps, favorites and diary.
+    static var groupDefaults: UserDefaults = UserDefaults(suiteName: appGroup) ?? .standard
 }

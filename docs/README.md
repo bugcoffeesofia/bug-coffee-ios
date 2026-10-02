@@ -25,6 +25,7 @@ reference so you can check it.
 | 6 | [Group-order protocol](06-group-order-protocol.md) | The serverless order wire format (v3), pricing and aggregation rules |
 | 7 | [Design & copy](07-design-and-copy.md) | Brand tokens, layout rules, the stamp-jitter algorithm, exact copy |
 | 8 | [Build & verify](08-build-and-verify.md) | Building/running the iOS reference app, and the acceptance tests a port must pass |
+| 9 | [Screenshots](09-screenshots.md) | What the reference app's screens look like, and how to regenerate the images |
 
 ## The product in six sentences
 

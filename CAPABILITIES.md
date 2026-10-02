@@ -204,7 +204,7 @@ scannable loyalty card in the platform wallet), not the .pkpass mechanics.
 | Primary field | label "ПЕЧАТИ" (Bulgarian "stamps"), value "0 / 9" *(static in the pass; live count isn't wired)* |
 | Secondary field | label "ЧЛЕН" ("member"), value = account email |
 | **Barcode** | **QR**, message = account UID, encoding iso-8859-1 |
-| **Location** | 42.69323° N, 23.34402° E — shop geofence, 15 m radius (`maxDistance`); surfaces the pass on the Lock Screen nearby, relevant text "Bug Coffee е наблизо" (Google Wallet: `locations` on the loyalty object) |
+| **Location** | 42.69323° N, 23.34402° E — shop geofence, 15 m radius (top-level `maxDistance`); surfaces the pass on the Lock Screen nearby, relevant text "Bug Coffee е наблизо" (Google Wallet: `locations` on the loyalty object) |
 | Background color | `#1F0409` |
 | Foreground color | `#FFFFFF` |
 | Label color | `#CC1E41` |

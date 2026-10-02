@@ -28,12 +28,29 @@ packages:
     from: "3.0.0"
 
 schemes:
+  # ⌘U runs everything: unit tests (Swift Testing, with coverage) and the
+  # screenshot UI tests. The scripts narrow it down with -only-testing:
+  #   Scripts/run_unit_tests.sh   → BugWalletTests + BugWalletMessagesTests
+  #   Scripts/take_screenshots.sh → BugWalletUITests (writes docs/screenshots/)
   BugWallet:
     build:
       targets:
         BugWallet: all
+        BugWalletTests: [test]
+        BugWalletMessagesTests: [test]
+        BugWalletUITests: [test]
     run:
       config: Debug
+    test:
+      config: Debug
+      gatherCoverageData: true
+      coverageTargets:
+        - BugWallet
+        - BugWalletMessagesTests
+      targets:
+        - BugWalletTests
+        - BugWalletMessagesTests
+        - BugWalletUITests
     archive:
       config: Release
 
@@ -50,12 +67,19 @@ schemes:
     archive:
       config: Release
 
+  # ⌘U here runs the Watch screenshot UI tests (BugWalletWatchUITests), which
+  # Scripts/take_screenshots.sh also runs on an Apple Watch simulator.
   BugWalletWatch:
     build:
       targets:
         BugWalletWatch: all
+        BugWalletWatchUITests: [test]
     run:
       config: Debug
+    test:
+      config: Debug
+      targets:
+        - BugWalletWatchUITests
     archive:
       config: Release
 
@@ -166,6 +190,79 @@ targets:
         CURRENT_PROJECT_VERSION: "1"
         TARGETED_DEVICE_FAMILY: "1,2"
         SWIFT_VERSION: "5.0"
+
+  # Unit tests for the iOS app (and the Shared code it compiles), hosted in
+  # BugWallet so they can `@testable import BugWallet`.
+  BugWalletTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: BugWalletTests
+    dependencies:
+      - target: BugWallet
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.zerogravityroom.bugwallet.Tests
+        GENERATE_INFOPLIST_FILE: YES
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SWIFT_VERSION: "5.0"
+
+  # Unit tests for the iMessage group order. An extension can't host tests, so
+  # this bundle compiles the extension's model files itself (no host app).
+  BugWalletMessagesTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: BugWalletMessagesTests
+      - path: MessagesExtension/Sources/GroupOrder.swift
+      - path: MessagesExtension/Sources/OrderStore.swift
+      - path: MessagesExtension/Sources/OrderCardRenderer.swift
+      - path: Shared/CoffeeMenu.swift
+      - path: Shared/SharedKeys.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.zerogravityroom.bugwallet.MessagesTests
+        GENERATE_INFOPLIST_FILE: YES
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SWIFT_VERSION: "5.0"
+
+  # Screenshot UI tests (see BugWalletUITests/ScreenshotTests.swift).
+  BugWalletUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: BugWalletUITests
+    dependencies:
+      - target: BugWallet
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.zerogravityroom.bugwallet.UITests
+        GENERATE_INFOPLIST_FILE: YES
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SWIFT_VERSION: "5.0"
+        # The tests use Swift Testing. Xcode (26.x and 27.0) aliases `Testing` to
+        # `_Testing_Unavailable` in UI-testing bundles, so `import Testing` fails
+        # to build; clearing the alias lets it through, and the tests run and pass
+        # (XCUIApplication works from @Test functions). Not officially supported
+        # by Apple — if a future Xcode breaks it, switch the file back to XCTest.
+        TESTING_FRAMEWORK_MODULE_ALIAS_FLAGS: ""
+
+  # Screenshot UI tests for the Watch app (BugWalletWatchUITests/WatchScreenshotTests.swift).
+  BugWalletWatchUITests:
+    type: bundle.ui-testing
+    platform: watchOS
+    sources:
+      - path: BugWalletWatchUITests
+    dependencies:
+      - target: BugWalletWatch
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.zerogravityroom.bugwallet.WatchUITests
+        GENERATE_INFOPLIST_FILE: YES
+        TARGETED_DEVICE_FAMILY: "4"
+        SWIFT_VERSION: "5.0"
+        WATCHOS_DEPLOYMENT_TARGET: "9.0"
+        SUPPORTED_PLATFORMS: "watchos watchsimulator"
 
   BugWalletWatch:
     type: application

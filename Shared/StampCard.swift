@@ -18,9 +18,7 @@ enum StampStore {
     /// `maxStamps = 9` on the real card (doc §5) — 9 stamps means free drink.
     static let maxStamps = 9
 
-    private static var defaults: UserDefaults {
-        UserDefaults(suiteName: SharedKeys.appGroup) ?? .standard
-    }
+    private static var defaults: UserDefaults { SharedKeys.groupDefaults }
 
     static var count: Int {
         min(max(defaults.integer(forKey: SharedKeys.defaultsStamps), 0), maxStamps)
@@ -85,7 +83,7 @@ struct StampCardView: View {
 
 /// Deterministic pseudo-random placement for one stamp (splitmix64 seeded by
 /// the slot index): rotation within ±20°, offset within ±12% of the slot.
-private struct SlotJitter {
+struct SlotJitter {
     let rotation: Angle
     private let dx: Double
     private let dy: Double

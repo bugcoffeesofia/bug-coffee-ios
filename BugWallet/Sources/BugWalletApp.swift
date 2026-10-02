@@ -21,11 +21,17 @@ final class Session: ObservableObject {
         didSet { persistAndSync() }
     }
 
-    init() {
+    private let defaults: UserDefaults
+    private let webSync: StampWebSync
+
+    /// `defaults` and `webSync` are seams for unit tests; the app uses the
+    /// standard defaults and the shared App Check WebView.
+    init(defaults: UserDefaults = .standard, webSync: StampWebSync? = nil) {
+        self.defaults = defaults
+        self.webSync = webSync ?? .shared
         // Start the watch link and re-push any saved UID so the Watch app gets it
         // even when the phone isn't freshly logged in this launch.
         WatchSync.shared.start()
-        let defaults = UserDefaults.standard
         if let uid = defaults.string(
             forKey: SharedKeys.defaultsUID
         ), !uid.isEmpty {
@@ -41,7 +47,7 @@ final class Session: ObservableObject {
             let restored = Account(uid: uid, email: email, idToken: "", refreshToken: refresh)
             account = restored
             WatchSync.shared.sync(uid: uid, email: email)
-            StampWebSync.shared.start(account: restored)
+            self.webSync.start(account: restored)
         }
     }
 
@@ -49,9 +55,8 @@ final class Session: ObservableObject {
 
     func signOut() {
         account = nil
-        StampWebSync.shared.stop()
+        webSync.stop()
         // Forget the persisted identity so the next launch shows the login screen.
-        let defaults = UserDefaults.standard
         defaults.removeObject(forKey: SharedKeys.defaultsUID)
         defaults.removeObject(forKey: SharedKeys.defaultsEmail)
         defaults.removeObject(forKey: SharedKeys.defaultsRefresh)
@@ -59,13 +64,12 @@ final class Session: ObservableObject {
 
     private func persistAndSync() {
         guard let account else { return }
-        let defaults = UserDefaults.standard
         defaults.set(account.uid, forKey: SharedKeys.defaultsUID)
         defaults.set(account.email, forKey: SharedKeys.defaultsEmail)
         defaults.set(account.refreshToken, forKey: SharedKeys.defaultsRefresh)
         WatchSync.shared.sync(uid: account.uid, email: account.email)
         // Kick off the App Check WebView to read the live stamp count.
-        StampWebSync.shared.start(account: account)
+        webSync.start(account: account)
     }
 }
 

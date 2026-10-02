@@ -15,8 +15,9 @@ Reference: `BugWallet/Sources/*View.swift`, `BugWalletWatch/Sources`, `StampWidg
 - The reference app is **light-mode only** by choice (`preferredColorScheme(.light)`). Other
   platforms may honor dark mode; the card and login screens are dark-on-brand anyway, so only
   the Products list is affected.
-- Orientation: portrait on phones. (The reference app pins portrait in `Info.plist`; large
-  foldable inner displays ignore that, so no layout may *depend* on portrait.)
+- Orientation: portrait on phones; every orientation on tablets. (The reference app pins
+  portrait for iPhone in `Info.plist`; large foldable inner displays ignore that, so no layout
+  may *depend* on portrait.)
 - Every screen must survive a short viewport: the login and card screens **scroll instead of
   clipping** when height runs out (keyboard up, split view, largest accessibility text sizes).
   See `AdaptiveLayout.swift`.

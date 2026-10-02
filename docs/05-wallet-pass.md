@@ -26,7 +26,7 @@ it is a **loyalty object** (with its loyalty *class* holding the brand-level fie
 | Primary field | label "ПЕЧАТИ" (Bulgarian: *stamps*), value **"0 / 9"** | `loyaltyPoints` (label "ПЕЧАТИ") |
 | Secondary field | label "ЧЛЕН" (*member*), value = account email, or a **typed name** for a pass built for a scanned UID | `accountName` |
 | **Barcode** | **QR**, message = **the account UID**, encoding `iso-8859-1` | `barcode` `{ type: QR_CODE, value: <uid> }` |
-| **Location** | 42.69323 N, 23.34402 E, `maxDistance` **15 m**, relevant text "Bug Coffee е наблизо" ("Bug Coffee is nearby") | `locations` on the object |
+| **Location** | 42.69323 N, 23.34402 E, top-level `maxDistance` **15 m** (not inside the location entry — Wallet ignores it there; it can only shrink Wallet's default radius), relevant text "Bug Coffee е наблизо" ("Bug Coffee is nearby") | `locations` on the object |
 | Background | `#1F0409` | class `hexBackgroundColor` |
 | Foreground | `#FFFFFF` | (platform-derived) |
 | Label color | `#CC1E41` | (platform-derived) |

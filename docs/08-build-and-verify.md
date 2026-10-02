@@ -23,15 +23,23 @@ Then set your signing **Team** and run. Targets and deployment floors:
 | `BugWalletStampWidget` | widget extension | iOS 16 (iOS 17 container background path) |
 | `BugWalletMessages` | iMessage app extension | iOS 16.0 |
 | `BugWalletWatch` | watchOS app, embedded in the iOS app | watchOS 9.0 |
+| `BugWalletUITests` | UI test bundle (app and widget screenshots) | iOS 16.0 |
+| `BugWalletWatchUITests` | UI test bundle (watch screenshots) | watchOS 9.0 |
+| `BugWalletTests` | unit tests (Swift Testing), hosted in `BugWallet` | iOS 16.0 |
+| `BugWalletMessagesTests` | unit tests for the group order, compiling the extension's model files (no host) | iOS 16.0 |
 
 Schemes:
 
 | Scheme | What it runs |
 |--------|--------------|
-| `BugWallet` | the app, **without** any pass-creation code |
+| `BugWallet` | the app, **without** any pass-creation code; ⌘U runs all three test bundles with coverage |
 | `BugWallet-LocalPass` | the app with on-device pass signing enabled (doc 5 §3) |
 | `BugWalletMessages` | launches Messages as the host app |
-| `BugWalletWatch` | the watch app |
+| `BugWalletWatch` | the watch app; ⌘U runs the watch screenshot tests |
+
+There are no separate test schemes: `Scripts/run_unit_tests.sh` runs the `BugWallet` scheme with
+`-only-testing:` the two unit bundles, and `Scripts/take_screenshots.sh` with `-only-testing:` the screenshot classes (plus the
+`BugWalletWatch` scheme for the watch; doc 9).
 
 Only two Swift packages, both Apple's, and only for pass signing: `swift-certificates` (X509)
 and `swift-crypto` (`_CryptoExtras`). Nothing else is external.
@@ -50,6 +58,32 @@ and `swift-crypto` (`_CryptoExtras`). Nothing else is external.
   `project.yml`), because some shared SwiftUI uses controls that don't exist on watchOS.
 - **Entitlements are generated** from `project.yml` — declare capabilities there, not in the
   `.entitlements` files.
+
+### 1.2 Unit tests and coverage
+
+```bash
+Scripts/run_unit_tests.sh
+```
+
+Runs both unit test bundles on an iPhone 17 simulator, prints line coverage per target, and
+fails if either drops below 95% (`MIN_COVERAGE`). What the tests rely on:
+
+- **No real data is touched.** `SharedKeys.groupDefaults` (behind `StampStore`,
+  `FavoritesStore` and `BlendJournal`) is swapped for a scratch suite, and `Session` takes its
+  `UserDefaults`. Tests that touch such process-wide state nest under the serialized
+  `AppStateTests` suite; pure value tests run in parallel.
+- **No network or permission prompts.** `FirebaseAuth.signIn` and `StampWebSync` take a
+  `URLSession` (stubbed with `StubURLProtocol`), `HealthLogger.log` takes a
+  `CaffeineHealthStore`, and `StampWebSync` loads a `bugtest://` page from a
+  `WKURLSchemeHandler` into a non-persistent data store — which also exercises the injected
+  App Check capture script end to end.
+- **View logic lives in models.** Sign-in (`LoginModel`), the stamp counter and Health logging
+  (`CardModel`) and the bean diary (`DiaryModel`) are tested directly; the views themselves are
+  rendered in a window in each of their states. What stays uncovered is tap-only button actions
+  and `onOpenURL`, which only a UI test can reach.
+- **The iMessage extension can't host tests**, so `BugWalletMessagesTests` compiles
+  `GroupOrder`, `OrderStore` and `OrderCardRenderer` itself, with a `MSConversation` subclass
+  standing in for a real conversation.
 
 [XcodeGen]: https://github.com/yonyz/XcodeGen
 

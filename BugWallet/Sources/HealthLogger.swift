@@ -36,6 +36,35 @@ enum CoffeeDrink: String, CaseIterable, Identifiable {
     }
 }
 
+/// The slice of `HKHealthStore` the logger needs — a seam so unit tests can
+/// stand in for Health without a permission prompt.
+protocol CaffeineHealthStore {
+    var isHealthDataAvailable: Bool { get }
+    func requestAuthorization(toShare: Set<HKSampleType>, read: Set<HKObjectType>) async throws
+    func authorizationStatus(for type: HKObjectType) -> HKAuthorizationStatus
+    func save(_ object: HKObject) async throws
+}
+
+/// The real Health database.
+struct SystemHealthStore: CaffeineHealthStore {
+    static let shared = SystemHealthStore()
+    private let store = HKHealthStore()
+
+    var isHealthDataAvailable: Bool { HKHealthStore.isHealthDataAvailable() }
+
+    func requestAuthorization(toShare: Set<HKSampleType>, read: Set<HKObjectType>) async throws {
+        try await store.requestAuthorization(toShare: toShare, read: read)
+    }
+
+    func authorizationStatus(for type: HKObjectType) -> HKAuthorizationStatus {
+        store.authorizationStatus(for: type)
+    }
+
+    func save(_ object: HKObject) async throws {
+        try await store.save(object)
+    }
+}
+
 /// Writes logged coffees to Apple Health as dietary caffeine samples.
 enum HealthLogger {
     enum HealthError: LocalizedError {
@@ -52,11 +81,10 @@ enum HealthLogger {
         }
     }
 
-    private static let store = HKHealthStore()
-
     /// Saves one drink to Health, asking for permission on first use.
-    static func log(_ drink: CoffeeDrink, at date: Date = .now) async throws {
-        guard HKHealthStore.isHealthDataAvailable() else { throw HealthError.unavailable }
+    static func log(_ drink: CoffeeDrink, at date: Date = .now,
+                    store: CaffeineHealthStore = SystemHealthStore.shared) async throws {
+        guard store.isHealthDataAvailable else { throw HealthError.unavailable }
 
         let caffeine = HKQuantityType(.dietaryCaffeine)
         try await store.requestAuthorization(toShare: [caffeine], read: [])

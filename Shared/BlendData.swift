@@ -149,6 +149,11 @@ struct TastingEntry: Codable, Equatable, Identifiable {
 
     /// True once the entry carries anything worth keeping.
     var isEmpty: Bool { rating == 0 && grind.isEmpty && note.isEmpty }
+
+    /// Sets the rating to `star`; tapping the current rating clears it.
+    mutating func tapStar(_ star: Int) {
+        rating = rating == star ? 0 : star
+    }
 }
 
 /// The tasting diary for one bean. Lives in the App Group like favorites:
@@ -209,9 +214,7 @@ struct BlendEntry: Codable, Equatable {
 }
 
 enum BlendJournal {
-    private static var defaults: UserDefaults {
-        UserDefaults(suiteName: SharedKeys.appGroup) ?? .standard
-    }
+    private static var defaults: UserDefaults { SharedKeys.groupDefaults }
 
     static var all: [String: BlendEntry] {
         guard let data = defaults.data(forKey: SharedKeys.defaultsBlendJournal),

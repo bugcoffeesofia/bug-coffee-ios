@@ -162,31 +162,52 @@ artwork (keep the same filenames and `@2x/@3x` sizes) before shipping.
 ## iPhone Duo
 
 Prepared for iPhone Duo following the readiness checklist in
-`../../RnD/iPhone Duo/README.md`. Build with **Xcode 27** (the RC is at
-`/Applications/Xcode-RC.app`) so the iOS 27 toolbar APIs compile in. Xcode 26
-still builds the project, because those calls sit behind `#if compiler(>=6.4)`.
+`../../RnD/iPhone Duo/README.md`. Build with **Xcode 27.1** (at
+`/Applications/Xcode-beta.app`) to get the full set of folding-device APIs.
+Older Xcodes still build the project: the iOS 27 calls sit behind
+`#if compiler(>=6.4)`, and the 27.1 ones behind
+`#if canImport(SwiftUI, _version: 8.0.85)` — SwiftUI's module version is 8.0.84
+in the 27.0 SDK and 8.0.85 in 27.1. All of them are `#available`-checked too,
+since the app still runs back to iOS 16.
 
-- **Card**: compact width keeps the single column. Regular width (the inner
-  display) gives the QR one half and the stamps and buttons the other, side by
-  side when the space is wide and stacked when it's tall, so the fold falls
-  between them. The scanner, alert and share sheet hang off the root, so they
-  stay up while the device opens or closes.
-- **Login and Card** scroll instead of clipping when the height runs out
+- **Card**: compact width keeps the single column. On the inner display an
+  `ArrangementView` gives the QR one half and the stamps and buttons the other
+  and splits at the fold itself — side by side folded like a book, stacked
+  propped on a table — with each half scrolling on its own. Before 27.1 the
+  same split is approximated with `AnyLayout` down the middle of the safe area.
+  The header pads itself clear of the outer display's corner camera
+  (`reservedRegions(kind: .occlusion)`), and the scanner, alert and share sheet
+  hang off the root so they stay up while the device opens or closes.
+- **Login**: the form is held to a readable width and, when the device is
+  folded like a book, shifts into the trailing half instead of sitting on the
+  crease (`reservedRegions(kind: .division)`).
+- **Login and Card** scroll rather than clip when the height runs out
   (`FittingScrollView`: Split View, the keyboard, large Dynamic Type).
 - **Products** is a `NavigationSplitView`: the list and the bean page sit side
   by side on the inner display, with the usual push on the outer one.
 - **Toolbars**: every item has a title and a symbol. On iOS 27 the favorite
   star is the last to overflow (`.visibilityPriority(.high)`) and the tasting
   editor's Save is pinned (`.topBarPinnedTrailing`).
-- **Scanner** (LocalPass): pinned to the safe area on every edge, and kept
-  upright with `AVCaptureDevice.RotationCoordinator`, because the inner display
-  ignores the portrait lock in `Info.plist`. The lock stays for the outer
-  display.
+- **Scanner** (LocalPass): every edge pinned to the safe area, the close button
+  and the hint nudged out of the camera cut-out and the crease
+  (`UIView.reservedRegions(kind:)`), and the preview kept upright with
+  `AVCaptureDevice.RotationCoordinator` — the inner display ignores the
+  portrait lock in `Info.plist`, which stays for the outer display.
 
-Anything that needs the iOS 27.1 SDK (reserved regions for the fold and the
-cameras, `ArrangementView`, the vertical-bar opt-out) is marked with a TODO and
-the commented-out code to drop in:
+Deliberately not adopted: no tab sidebar on the inner display
+(`.defaultTabBarPlacement(.sidebar)`), because there are two tabs and Products
+already has a sidebar of its own; no hinge-driven effects; no scene accessory
+(`CameraCaptureAccessory` is for camera capture UI, which the QR scanner is
+not); and the scanner keeps using the default back camera, so the outer/inner
+front camera types and `AVCaptureDeviceDirectionCoordinator` don't apply.
+
+Screenshots on the Duo simulator:
 
 ```sh
-grep -rn "TODO(iPhone Duo" --include='*.swift' .
+SHOTS=app DEVICES="iPhone Duo" \
+DEVELOPER_DIR=/Applications/Xcode-beta.app/Contents/Developer \
+Scripts/take_screenshots.sh
 ```
+
+Folding is a Device Hub action in Simulator — neither `simctl` nor XCUITest can
+do it — so the folded poses in the checklist's test matrix still need a person.

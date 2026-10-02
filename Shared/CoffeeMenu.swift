@@ -109,9 +109,7 @@ enum Price {
 /// up in the other on next launch). Purely local — nothing about favorites
 /// travels in the message.
 enum FavoritesStore {
-    private static var defaults: UserDefaults {
-        UserDefaults(suiteName: SharedKeys.appGroup) ?? .standard
-    }
+    private static var defaults: UserDefaults { SharedKeys.groupDefaults }
 
     static var ids: Set<String> {
         Set(defaults.stringArray(forKey: SharedKeys.defaultsFavorites) ?? [])
@@ -122,5 +120,10 @@ enum FavoritesStore {
         if !current.insert(id).inserted { current.remove(id) }
         defaults.set(Array(current).sorted(), forKey: SharedKeys.defaultsFavorites)
         return current
+    }
+
+    /// Stars `id` if it isn't starred yet; never un-stars.
+    static func add(_ id: String) -> Set<String> {
+        ids.contains(id) ? ids : toggle(id)
     }
 }

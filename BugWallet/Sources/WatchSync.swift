@@ -10,11 +10,11 @@ final class WatchSync: NSObject, WCSessionDelegate {
     static let shared = WatchSync()
     private override init() { super.init() }
 
-    private var activated = false
+    private(set) var activated = false
     // The latest full application context. `updateApplicationContext` replaces
     // the whole dictionary on each call, so we keep it here and merge partial
     // updates (e.g. a new stamp count) into it before resending.
-    private var context: [String: Any] = [:]
+    private(set) var context: [String: Any] = [:]
 
     func start() {
         guard WCSession.isSupported() else { return }

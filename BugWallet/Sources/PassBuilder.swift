@@ -75,10 +75,12 @@ enum PassBuilder {
                 [
                     "latitude": PassConfig.latitude,
                     "longitude": PassConfig.longitude,
-                    "relevantText": PassConfig.locationRelevantText,
-                    "maxDistance": PassConfig.locationMaxDistance
+                    "relevantText": PassConfig.locationRelevantText
                 ]
             ],
+            // Top-level, not per-location: Wallet ignores `maxDistance` inside a
+            // location dictionary. It can only shrink Wallet's default radius.
+            "maxDistance": PassConfig.locationMaxDistance,
             "backgroundColor": PassConfig.backgroundColor,
             "foregroundColor": PassConfig.foregroundColor,
             "labelColor": PassConfig.labelColor
@@ -109,10 +111,10 @@ enum PassBuilder {
     /// PNGs by exact path (avoiding the `@2x`/`@3x` scale-suffix gotcha in
     /// `Bundle.url(forResource:)`), and guarantees an `icon.png` by rendering a
     /// fallback so a generated pass can never be icon-less — which Wallet rejects.
-    static func passImages() -> [String: Data] {
+    static func passImages(in bundle: Bundle = .main) -> [String: Data] {
         var images: [String: Data] = [:]
         for name in ["icon.png", "icon@2x.png", "icon@3x.png", "logo.png", "logo@2x.png"] {
-            if let data = bundlePNG(name) { images[name] = data }
+            if let data = bundlePNG(name, in: bundle) { images[name] = data }
         }
         if images["icon.png"] == nil {
             images["icon.png"] = renderFallbackIcon(points: 29, scale: 1)
@@ -123,8 +125,8 @@ enum PassBuilder {
     }
 
     /// Reads a bundled resource by exact filename from the bundle's resource dir.
-    private static func bundlePNG(_ filename: String) -> Data? {
-        guard let base = Bundle.main.resourceURL else { return nil }
+    private static func bundlePNG(_ filename: String, in bundle: Bundle) -> Data? {
+        guard let base = bundle.resourceURL else { return nil }
         let url = base.appendingPathComponent(filename)
         guard FileManager.default.fileExists(atPath: url.path) else { return nil }
         return try? Data(contentsOf: url)

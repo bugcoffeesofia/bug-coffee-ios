@@ -54,6 +54,9 @@ final class QRScannerController: UIViewController, AVCaptureMetadataOutputObject
     // typed as NSObject because a stored property can't be iOS 17-only.
     private var rotationCoordinator: NSObject?
     private var rotationObservation: NSKeyValueObservation?
+    // Held so the reserved regions (camera cut-out, fold) can nudge them.
+    private var closeButtonTop: NSLayoutConstraint?
+    private var hintLeading: NSLayoutConstraint?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -78,15 +81,7 @@ final class QRScannerController: UIViewController, AVCaptureMetadataOutputObject
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         previewLayer?.frame = view.layer.bounds
-        // TODO(iPhone Duo, iOS 27.1 SDK): the close button and hint are placed by
-        // hand. The safe area should keep them clear of the outer display's
-        // corner camera, but once `reservedRegions(kind:)` ships (it's not in the
-        // iOS 27.0 SDK), check against the camera itself and, on the inner
-        // display, the fold:
-        //
-        //     let camera = view.reservedRegions(kind: .occlusion).map(\.frame)
-        //     let fold = view.reservedRegions(kind: .division).map(\.frame)
-        //     // …then move the close button and hint off anything in camera + fold.
+        avoidReservedRegions()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -94,6 +89,37 @@ final class QRScannerController: UIViewController, AVCaptureMetadataOutputObject
         sessionQueue.async { [session] in
             if session.isRunning { session.stopRunning() }
         }
+    }
+
+    /// Keeps the two hand-placed controls out of the display's reserved
+    /// regions: the close button below the outer display's corner camera, and
+    /// the hint out of the crease when the device is folded like a book. The
+    /// constants only change when a region does, so this doesn't loop back
+    /// through `viewDidLayoutSubviews`.
+    private func avoidReservedRegions() {
+        #if canImport(SwiftUI, _version: 8.0.85) // iOS 27.1 SDK (Xcode 27.1)
+        guard #available(iOS 27.1, *) else { return }
+        // Region frames are in this view's coordinate space and already include
+        // the margins they want left clear.
+        let cameraBottom = view.reservedRegions(kind: .occlusion)
+            .map(\.frame)
+            .filter { $0.maxX > view.bounds.midX } // the close button's side
+            .map(\.maxY)
+            .max() ?? 0
+        setConstant(max(12, cameraBottom - view.safeAreaInsets.top + 8), on: closeButtonTop)
+
+        let foldTrailingEdge = view.reservedRegions(kind: .division)
+            .map(\.frame)
+            .filter { $0.height > $0.width } // a vertical crease only
+            .map(\.maxX)
+            .max() ?? 0
+        setConstant(max(24, foldTrailingEdge - view.safeAreaInsets.left + 24), on: hintLeading)
+        #endif
+    }
+
+    private func setConstant(_ constant: CGFloat, on constraint: NSLayoutConstraint?) {
+        guard let constraint, constraint.constant != constant else { return }
+        constraint.constant = constant
     }
 
     private func configureAndStart() {
@@ -172,8 +198,10 @@ final class QRScannerController: UIViewController, AVCaptureMetadataOutputObject
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addAction(UIAction { [weak self] _ in self?.onCancel?() }, for: .touchUpInside)
         view.addSubview(button)
+        let top = button.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12)
+        closeButtonTop = top
         NSLayoutConstraint.activate([
-            button.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12),
+            top,
             button.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
             button.widthAnchor.constraint(equalToConstant: 36),
             button.heightAnchor.constraint(equalToConstant: 36)
@@ -189,8 +217,10 @@ final class QRScannerController: UIViewController, AVCaptureMetadataOutputObject
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(label)
+        let leading = label.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 24)
+        hintLeading = leading
         NSLayoutConstraint.activate([
-            label.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 24),
+            leading,
             label.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24),
             label.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -32)
         ])
