@@ -95,6 +95,20 @@ schemes:
     archive:
       config: Debug-LocalPass
 
+  # The App Clip on its own (login → QR + stamps → Add to Apple Wallet). Runs the
+  # Debug-LocalPass config because adding to Wallet is the point of the prototype
+  # and, with no pass-issuing backend, the pass is signed on-device. Embedded in
+  # the app, the clip follows the app's config instead (no Wallet button in
+  # Debug/Release).
+  BugWalletClip:
+    build:
+      targets:
+        BugWalletClip: all
+    run:
+      config: Debug-LocalPass
+    archive:
+      config: Release
+
 targets:
   BugWallet:
     type: application
@@ -123,6 +137,8 @@ targets:
       - target: BugWalletMessages
       # Home-screen stamp-card widget — embedded into PlugIns.
       - target: BugWalletStampWidget
+      # App Clip (loyalty card only) — embedded into AppClips.
+      - target: BugWalletClip
     # App Group so the widget can read the stamp count, plus HealthKit so
     # "Log a coffee" can write caffeine samples. XcodeGen regenerates this
     # .entitlements file from these properties, so declare everything here.
@@ -143,6 +159,73 @@ targets:
         CURRENT_PROJECT_VERSION: "1"
         TARGETED_DEVICE_FAMILY: "1,2"
         SWIFT_VERSION: "5.0"
+
+  # App Clip: just the loyalty card — sign in, show the QR and the stamp count,
+  # add the card to Apple Wallet. It compiles the app's own login, QR, stamp-sync
+  # and pass code rather than copies; only the two files under AppClip/Sources
+  # are its own.
+  BugWalletClip:
+    type: application.on-demand-install-capable
+    platform: iOS
+    # Same flag as the app: on-device pass signing only in Debug-LocalPass.
+    configFiles:
+      Debug-LocalPass: Config/LocalPassCreation.xcconfig
+    sources:
+      - path: AppClip/Sources
+      - path: AppClip/Resources
+      - path: BugWallet/Sources/AdaptiveLayout.swift
+      - path: BugWallet/Sources/FirebaseAuth.swift
+      - path: BugWallet/Sources/LoginView.swift
+      - path: BugWallet/Sources/PassBuilder.swift
+      - path: BugWallet/Sources/PassSigner.swift
+      - path: BugWallet/Sources/PkPassZip.swift
+      - path: BugWallet/Sources/QRGenerator.swift
+      - path: BugWallet/Sources/StampWebSync.swift
+      - path: BugWallet/Sources/WalletUI.swift
+      # Only because StampWebSync pushes the live count through it. The clip
+      # never starts the watch session, so those pushes go nowhere.
+      - path: BugWallet/Sources/WatchSync.swift
+      - path: BugWallet/Sources/Zip.swift
+      - path: Shared/SharedKeys.swift
+      - path: Shared/StampCard.swift
+      - path: BugWallet/Resources/Assets.xcassets
+      - path: PassTemplate
+        buildPhase: resources
+    dependencies:
+      - package: SwiftCertificates
+        product: X509
+      - package: SwiftCrypto
+        product: _CryptoExtras
+    # The Pass Type ID certificate and key go into the bundle only when local
+    # pass creation is on, so a Debug/Release clip carries no signing key.
+    postBuildScripts:
+      - name: Copy pass signing assets (local pass creation only)
+        basedOnDependencyAnalysis: false
+        script: |
+          if [ "${LOCAL_PASS_CREATION_ENABLED}" = "YES" ]; then
+            cp "${SRCROOT}/BugWallet/Resources/Signing/"*.pem "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/"
+          fi
+    # The parent-application identifier is what makes this an App Clip of
+    # BugWallet; the App Group shares the stamp count with the app and widget.
+    entitlements:
+      path: AppClip/BugWalletClip.entitlements
+      properties:
+        com.apple.developer.parent-application-identifiers:
+          - $(AppIdentifierPrefix)com.zerogravityroom.bugwallet
+        com.apple.security.application-groups:
+          - group.com.zerogravityroom.bugwallet
+    settings:
+      base:
+        # An App Clip's bundle id must be the parent app's plus a suffix.
+        PRODUCT_BUNDLE_IDENTIFIER: com.zerogravityroom.bugwallet.Clip
+        INFOPLIST_FILE: AppClip/Resources/Info.plist
+        GENERATE_INFOPLIST_FILE: NO
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SWIFT_VERSION: "5.0"
+        ENABLE_USER_SCRIPT_SANDBOXING: NO
 
   # iMessage app: share a group coffee order in a chat; everyone taps the
   # bubble, picks their drinks, and sends the updated order back. The order

@@ -26,6 +26,7 @@ reference so you can check it.
 | 7 | [Design & copy](07-design-and-copy.md) | Brand tokens, layout rules, the stamp-jitter algorithm, exact copy |
 | 8 | [Build & verify](08-build-and-verify.md) | Building/running the iOS reference app, and the acceptance tests a port must pass |
 | 9 | [Screenshots](09-screenshots.md) | What the reference app's screens look like, and how to regenerate the images |
+| 10 | [Architecture](10-architecture.md) | How the iOS reference app itself is structured: targets, layers, state, runtime flows, compile-time gates (iOS-specific, unlike docs 1–9) |
 
 ## The product in six sentences
 
