@@ -13,7 +13,7 @@ enum PassConfig {
     static let organizationName = "Bug Coffee"
     static let description = "Bug Coffee Loyalty Card"
 
-    // Brand colors from the reverse-engineering doc (§6 / §9.1).
+    // Brand colors (docs/07 §1).
     static let backgroundColor = "rgb(31, 4, 9)"     // #1F0409 darkBrown
     static let foregroundColor = "rgb(255, 255, 255)"
     static let labelColor = "rgb(204, 30, 65)"       // #CC1E41 accent red

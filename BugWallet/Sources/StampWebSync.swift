@@ -1,11 +1,11 @@
 import Foundation
 import WebKit
 
-/// **Variant 3 — WebView App Check token vendor.**
+/// **Option C — WebView App Check token vendor** (see docs/02 §5.3).
 ///
 /// The live stamp count lives in Firestore behind Firebase **App Check**, whose
 /// only provider for this project is reCAPTCHA v3 — a web-origin provider we
-/// cannot reproduce natively (doc §7). This class works around that *without*
+/// cannot reproduce natively. This class works around that *without*
 /// defeating App Check: it runs the **real web app** (`app.bugcoffee.com`) in an
 /// off-screen `WKWebView`, lets that page perform its own legitimate reCAPTCHA
 /// attestation, and lifts the resulting `X-Firebase-AppCheck` token (plus the
@@ -172,7 +172,7 @@ final class StampWebSync: NSObject, ObservableObject {
         }
     }
 
-    // MARK: - Native Firestore read (the point of variant 3)
+    // MARK: - Native Firestore read (the point of this class)
 
     private func nativeReadStampCount() async {
         guard let account,

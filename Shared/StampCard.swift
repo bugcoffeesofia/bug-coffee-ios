@@ -12,10 +12,10 @@ enum BugBrand {
 
 /// The manually tracked stamp count (0...9), stored in the App Group so the
 /// home-screen widget can read it. The live count is App Check-gated on the
-/// backend (doc §7), so the user taps + in the app whenever the barista adds
+/// backend, so the user taps + in the app whenever the barista adds
 /// a stamp.
 enum StampStore {
-    /// `maxStamps = 9` on the real card (doc §5) — 9 stamps means free drink.
+    /// `maxStamps = 9` on the real card — 9 stamps means free drink.
     static let maxStamps = 9
 
     private static var defaults: UserDefaults { SharedKeys.groupDefaults }

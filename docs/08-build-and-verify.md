@@ -89,6 +89,29 @@ fails if either drops below 95% (`MIN_COVERAGE`). What the tests rely on:
 
 ---
 
+### 1.3 Xcode Cloud
+
+`BugWallet.xcodeproj` is not committed — XcodeGen makes it from `project.yml`.
+On Xcode Cloud, `ci_scripts/ci_post_clone.sh` installs XcodeGen (Homebrew) and
+generates the project before any build action. Xcode Cloud never resolves Swift
+packages itself, so the one file inside the project that *is* committed is
+`BugWallet.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`.
+After changing package versions in `project.yml`, regenerate, let Xcode resolve,
+and commit that file.
+
+Workflow setup (in Xcode → Integrate → Create Workflow):
+
+- Archive action: scheme `BugWallet`, platform iOS. It embeds the Watch app,
+  widget, iMessage extension and App Clip. Xcode Cloud sets the build number.
+- Signing: cloud-managed, team `4F5J749858`. The App Group, HealthKit and App
+  Clip capabilities must be enabled on the App IDs in the developer portal.
+- Don't build `BugWallet-LocalPass` or the clip's `Debug-LocalPass` config in
+  the cloud: they need the gitignored pass-signing keys in
+  `BugWallet/Resources/Signing/` and must never be distributed anyway.
+- Test action: the `BugWallet` scheme's test plan also runs the screenshot UI
+  tests, which write into the source tree. For a cloud test action, limit it to
+  `BugWalletTests` and `BugWalletMessagesTests`.
+
 ## 2. Platform capabilities a port must request
 
 | Capability | Why | iOS | Android |

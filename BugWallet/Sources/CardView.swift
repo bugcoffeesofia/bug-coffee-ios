@@ -27,8 +27,8 @@ final class CardModel: ObservableObject {
         let webSync = webSync ?? .shared
         self.stamps = stamps ?? StampStore.count
         self.logDrink = logDrink
-        // The App Check WebView reads the live count from the backend (doc §7,
-        // variant 3). The backend is authoritative — adopt the live count when
+        // The App Check WebView reads the live count from the backend.
+        // The backend is authoritative — adopt the live count when
         // it arrives (this also overrides a stale manual value).
         liveCount = webSync.$backendCount
             .compactMap { $0 }
@@ -274,7 +274,7 @@ struct CardView: View {
 
     private var qrSection: some View {
         VStack(spacing: 20) {
-            // The loyalty QR — the raw Firebase UID, level H (doc §6).
+            // The loyalty QR — the raw Firebase UID, level H.
             if let qr = QRGenerator.image(from: account.uid) {
                 Image(uiImage: qr)
                     .interpolation(.none)
@@ -291,8 +291,8 @@ struct CardView: View {
         }
     }
 
-    // Manually tracked stamps — the live count is App Check-gated
-    // (doc §7), so tap + whenever the barista stamps you. The same
+    // Manually tracked stamps — the live count is App Check-gated,
+    // so tap + whenever the barista stamps you. The same
     // count feeds the home-screen widget through the App Group.
     private var stampsSection: some View {
         VStack(spacing: 12) {
@@ -308,7 +308,7 @@ struct CardView: View {
                 stepButton("plus.circle.fill", action: model.increment)
             }
             StampCardView(count: model.stamps, slotSize: 34, spacing: 8)
-            // Live-sync status (App Check WebView, doc §7 variant 3).
+            // Live-sync status (App Check WebView).
             Text("Backend: \(webSync.status)")
                 .font(.caption2.monospacedDigit())
                 .foregroundStyle(.white.opacity(0.5))

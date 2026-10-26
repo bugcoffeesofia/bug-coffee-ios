@@ -3,7 +3,7 @@ import CoreImage
 
 /// QR generation (iOS only — CoreImage isn't available on watchOS, so the phone
 /// renders the code and ships a PNG to the watch). Correction level H matches the
-/// web app (analysis doc §6).
+/// web app.
 enum QRGenerator {
     private static let context = CIContext(options: nil)
 

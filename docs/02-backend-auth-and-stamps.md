@@ -5,8 +5,7 @@ Firebase** project, the same one the shop's web app uses. Everything else the ap
 either derived from the signed-in identity or stored on the device.
 
 Reference: `BugWallet/Sources/FirebaseAuth.swift`, `BugWalletApp.swift`,
-`StampWebSync.swift`; and `../Analysis/docs/BugCoffee-Reverse-Engineering.md` for how the
-backend was mapped.
+`StampWebSync.swift`.
 
 ---
 
@@ -179,7 +178,7 @@ This is the path to recommend for any port intended for distribution.
 
 ### 5.3 Option C — WebView token vendor (what the iOS reference app does)
 
-Implemented in `StampWebSync.swift` and labelled there as "variant 3". It does **not** forge or
+Implemented in `StampWebSync.swift`. It does **not** forge or
 bypass attestation: it runs the **real web app** in an off-screen WebView, lets that page
 perform its own legitimate reCAPTCHA attestation, and reuses the resulting token for one native
 read of **the signed-in user's own document**.
@@ -227,10 +226,10 @@ It requires an embeddable browser engine with script injection and a persistent 
 store, which not every target platform offers on the same terms. It also carries the user's
 refresh token into a web context. It is a **personal-build workaround**, appropriate for an app
 whose user reads only their own loyalty count with their own credentials — not something to
-ship broadly, and not a substitute for Option B. Note also that the project's own
-reverse-engineering notes advise against *defeating* App Check; this approach deliberately
-works *with* it (a real attestation, performed by the real web app, for the real user) rather
-than around it, but the honest framing is "borrowed credential, narrow use".
+ship broadly, and not a substitute for Option B. This project does not aim to *defeat* App
+Check: this approach deliberately works *with* it (a real attestation, performed by the real
+web app, for the real user) rather than around it, but the honest framing is "borrowed
+credential, narrow use".
 
 A far simpler variant of the same idea, if you only want the feature and not the native read:
 **show the web app's own card screen in a WebView** (Option D). Everything works unchanged

@@ -1,14 +1,13 @@
 # Bug Coffee — Wallet Pass (iOS)
 
 A small SwiftUI app that logs into a Bug Coffee account and turns it into an
-**Apple Wallet loyalty card**. Built from the analysis in
-`../Analysis/docs/BugCoffee-Reverse-Engineering.md`.
+**Apple Wallet loyalty card**.
 
 The loyalty QR is simply the account's **Firebase UID** at error-correction level
-`H` — that's the exact string shop staff scan (doc §6). Firebase Auth is not
-App Check-gated, so login works natively with only the public API key (doc §4.1).
+`H` — that's the exact string shop staff scan. Firebase Auth is not
+App Check-gated, so login works natively with only the public API key.
 The live stamp count *is* behind App Check and is intentionally out of scope for
-this simple app (doc §7).
+this simple app.
 
 ## Porting it to other platforms
 

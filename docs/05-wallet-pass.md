@@ -65,7 +65,7 @@ API (or embed it in a **JWT signed by a service account**) and hand the user a "
 Wallet" link/button. The private key lives on your server or in your build pipeline, never in
 the app.
 
-So this subsystem is **replaced, not ported**. Only doc §1 carries over.
+So this subsystem is **replaced, not ported**. Only §1 (pass content) carries over.
 
 ---
 

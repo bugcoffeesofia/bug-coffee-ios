@@ -2,7 +2,7 @@ import Foundation
 
 /// A signed-in Bug Coffee account.
 /// `uid` is the Firebase Auth UID — this exact string is what the QR encodes
-/// and what shop staff scan (see the reverse-engineering doc §6).
+/// and what shop staff scan.
 struct Account: Equatable, Sendable {
     let uid: String
     let email: String
@@ -37,9 +37,9 @@ enum AuthError: LocalizedError {
 
 /// Talks directly to Google Identity Toolkit, exactly like the web app's
 /// `signInWithEmailAndPassword`. Auth is NOT App Check-gated, so this works
-/// from a native app with only the public API key (doc §4.1).
+/// from a native app with only the public API key.
 enum FirebaseAuth {
-    /// Public Firebase Web config, safe to embed (doc §3).
+    /// Public Firebase Web config, safe to embed.
     static let apiKey = "AIzaSyDjY4FROGGt9h4Q-V_3InC8Nv2sEeA-FxI"
 
     static func signIn(email: String, password: String,
