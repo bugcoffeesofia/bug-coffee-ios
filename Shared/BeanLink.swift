@@ -5,7 +5,7 @@ import Foundation
 /// iMessage extension and anything else that wants to hand out a link agree on
 /// one format.
 ///
-/// The scheme is registered in `BugWallet/Resources/Info.plist`
+/// The scheme is registered in `BugCoffee/Resources/Info.plist`
 /// (CFBundleURLTypes); `RootView` turns an incoming URL into a bean page.
 enum BeanLink {
     static let scheme = "bugcoffee"

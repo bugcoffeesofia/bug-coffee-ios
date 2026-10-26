@@ -2,10 +2,10 @@
 # Runs the screenshot UI tests and writes the PNGs to docs/screenshots/<device>/ —
 # one folder per simulator:
 #
-#   app      BugWalletUITests/ScreenshotTests.swift on each of $DEVICES
+#   app      BugCoffeeUITests/ScreenshotTests.swift on each of $DEVICES
 #            (iphone-17-pro/, ipad-mini-a17-pro/ — iPads in portrait and landscape)
-#   watch    BugWalletWatchUITests on $WATCH_DEVICE (apple-watch-series-11-46mm/)
-#   widgets  BugWalletUITests/WidgetScreenshotTests.swift — adds the Stamp Card
+#   watch    BugCoffeeWatchUITests on $WATCH_DEVICE (apple-watch-series-11-46mm/)
+#   widgets  BugCoffeeUITests/WidgetScreenshotTests.swift — adds the Stamp Card
 #            widgets to the home screen of a throwaway $WIDGET_DEVICE simulator,
 #            which is deleted afterwards (images go to that device's folder)
 #
@@ -87,9 +87,9 @@ if wants app; then
   done
 
   TEST_RUNNER_SCREENSHOTS_DIR="$OUT_DIR" xcodebuild test \
-    -project BugWallet.xcodeproj \
-    -scheme BugWallet \
-    -only-testing:BugWalletUITests/ScreenshotTests \
+    -project BugCoffee.xcodeproj \
+    -scheme BugCoffee \
+    -only-testing:BugCoffeeUITests/ScreenshotTests \
     -enableCodeCoverage NO \
     "${DESTINATIONS[@]}" \
     -quiet
@@ -104,8 +104,8 @@ if wants watch; then
   # The watch simulator now and then refuses to relaunch the app between tests
   # ("FBSApplicationLibrary returned nil"); a retry of just that test gets past it.
   TEST_RUNNER_SCREENSHOTS_DIR="$OUT_DIR" xcodebuild test \
-    -project BugWallet.xcodeproj \
-    -scheme BugWalletWatch \
+    -project BugCoffee.xcodeproj \
+    -scheme BugCoffeeWatch \
     -destination "id=$UDID" \
     -retry-tests-on-failure -test-iterations 3 \
     -quiet
@@ -124,9 +124,9 @@ if wants widgets; then
   TEST_RUNNER_SCREENSHOTS_DEVICE="$WIDGET_DEVICE" \
   TEST_RUNNER_SCREENSHOTS_WIDGETS=1 \
   xcodebuild test \
-    -project BugWallet.xcodeproj \
-    -scheme BugWallet \
-    -only-testing:BugWalletUITests/WidgetScreenshotTests \
+    -project BugCoffee.xcodeproj \
+    -scheme BugCoffee \
+    -only-testing:BugCoffeeUITests/WidgetScreenshotTests \
     -enableCodeCoverage NO \
     -destination "id=$SCRATCH" \
     -quiet

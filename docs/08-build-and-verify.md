@@ -12,42 +12,42 @@ The Xcode project is **generated** from `project.yml` with [XcodeGen] — edit t
 ```bash
 brew install xcodegen
 xcodegen generate
-open BugWallet.xcodeproj
+open BugCoffee.xcodeproj
 ```
 
 Then set your signing **Team** and run. Targets and deployment floors:
 
 | Target | Kind | Floor |
 |--------|------|-------|
-| `BugWallet` | iOS app (iPhone + iPad) | iOS 16.0 |
-| `BugWalletStampWidget` | widget extension | iOS 16 (iOS 17 container background path) |
-| `BugWalletMessages` | iMessage app extension | iOS 16.0 |
-| `BugWalletWatch` | watchOS app, embedded in the iOS app | watchOS 9.0 |
-| `BugWalletUITests` | UI test bundle (app and widget screenshots) | iOS 16.0 |
-| `BugWalletWatchUITests` | UI test bundle (watch screenshots) | watchOS 9.0 |
-| `BugWalletTests` | unit tests (Swift Testing), hosted in `BugWallet` | iOS 16.0 |
-| `BugWalletMessagesTests` | unit tests for the group order, compiling the extension's model files (no host) | iOS 16.0 |
+| `BugCoffee` | iOS app (iPhone + iPad) | iOS 16.0 |
+| `BugCoffeeStampWidget` | widget extension | iOS 16 (iOS 17 container background path) |
+| `BugCoffeeMessages` | iMessage app extension | iOS 16.0 |
+| `BugCoffeeWatch` | watchOS app, embedded in the iOS app | watchOS 9.0 |
+| `BugCoffeeUITests` | UI test bundle (app and widget screenshots) | iOS 16.0 |
+| `BugCoffeeWatchUITests` | UI test bundle (watch screenshots) | watchOS 9.0 |
+| `BugCoffeeTests` | unit tests (Swift Testing), hosted in `BugCoffee` | iOS 16.0 |
+| `BugCoffeeMessagesTests` | unit tests for the group order, compiling the extension's model files (no host) | iOS 16.0 |
 
 Schemes:
 
 | Scheme | What it runs |
 |--------|--------------|
-| `BugWallet` | the app, **without** any pass-creation code; ⌘U runs all three test bundles with coverage |
-| `BugWallet-LocalPass` | the app with on-device pass signing enabled (doc 5 §3) |
-| `BugWalletMessages` | launches Messages as the host app |
-| `BugWalletWatch` | the watch app; ⌘U runs the watch screenshot tests |
+| `BugCoffee` | the app, **without** any pass-creation code; ⌘U runs all three test bundles with coverage |
+| `BugCoffee-LocalPass` | the app with on-device pass signing enabled (doc 5 §3) |
+| `BugCoffeeMessages` | launches Messages as the host app |
+| `BugCoffeeWatch` | the watch app; ⌘U runs the watch screenshot tests |
 
-There are no separate test schemes: `Scripts/run_unit_tests.sh` runs the `BugWallet` scheme with
+There are no separate test schemes: `Scripts/run_unit_tests.sh` runs the `BugCoffee` scheme with
 `-only-testing:` the two unit bundles, and `Scripts/take_screenshots.sh` with `-only-testing:` the screenshot classes (plus the
-`BugWalletWatch` scheme for the watch; doc 9).
+`BugCoffeeWatch` scheme for the watch; doc 9).
 
 Only two Swift packages, both Apple's, and only for pass signing: `swift-certificates` (X509)
 and `swift-crypto` (`_CryptoExtras`). Nothing else is external.
 
 ### 1.1 Things that will bite you
 
-- **On-device signing assets.** `BugWallet-LocalPass` needs `passcert.pem`, `passkey.pem`
-  (unencrypted PKCS#8) and `wwdr.pem` in `BugWallet/Resources/Signing/`. They are gitignored.
+- **On-device signing assets.** `BugCoffee-LocalPass` needs `passcert.pem`, `passkey.pem`
+  (unencrypted PKCS#8) and `wwdr.pem` in `BugCoffee/Resources/Signing/`. They are gitignored.
   Without them the pass buttons surface a "Missing signing asset" error.
 - **The camera scanner needs a real device** — the Simulator has none and shows a message
   instead.
@@ -81,7 +81,7 @@ fails if either drops below 95% (`MIN_COVERAGE`). What the tests rely on:
   (`CardModel`) and the bean diary (`DiaryModel`) are tested directly; the views themselves are
   rendered in a window in each of their states. What stays uncovered is tap-only button actions
   and `onOpenURL`, which only a UI test can reach.
-- **The iMessage extension can't host tests**, so `BugWalletMessagesTests` compiles
+- **The iMessage extension can't host tests**, so `BugCoffeeMessagesTests` compiles
   `GroupOrder`, `OrderStore` and `OrderCardRenderer` itself, with a `MSConversation` subclass
   standing in for a real conversation.
 
@@ -91,26 +91,26 @@ fails if either drops below 95% (`MIN_COVERAGE`). What the tests rely on:
 
 ### 1.3 Xcode Cloud
 
-`BugWallet.xcodeproj` is not committed — XcodeGen makes it from `project.yml`.
+`BugCoffee.xcodeproj` is not committed — XcodeGen makes it from `project.yml`.
 On Xcode Cloud, `ci_scripts/ci_post_clone.sh` installs XcodeGen (Homebrew) and
 generates the project before any build action. Xcode Cloud never resolves Swift
 packages itself, so the one file inside the project that *is* committed is
-`BugWallet.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`.
+`BugCoffee.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`.
 After changing package versions in `project.yml`, regenerate, let Xcode resolve,
 and commit that file.
 
 Workflow setup (in Xcode → Integrate → Create Workflow):
 
-- Archive action: scheme `BugWallet`, platform iOS. It embeds the Watch app,
+- Archive action: scheme `BugCoffee`, platform iOS. It embeds the Watch app,
   widget, iMessage extension and App Clip. Xcode Cloud sets the build number.
-- Signing: cloud-managed, team `4F5J749858`. The App Group, HealthKit and App
+- Signing: cloud-managed, team `FM4AWM58J6`. The App Group, HealthKit and App
   Clip capabilities must be enabled on the App IDs in the developer portal.
-- Don't build `BugWallet-LocalPass` or the clip's `Debug-LocalPass` config in
+- Don't build `BugCoffee-LocalPass` or the clip's `Debug-LocalPass` config in
   the cloud: they need the gitignored pass-signing keys in
-  `BugWallet/Resources/Signing/` and must never be distributed anyway.
-- Test action: the `BugWallet` scheme's test plan also runs the screenshot UI
+  `BugCoffee/Resources/Signing/` and must never be distributed anyway.
+- Test action: the `BugCoffee` scheme's test plan also runs the screenshot UI
   tests, which write into the source tree. For a cloud test action, limit it to
-  `BugWalletTests` and `BugWalletMessagesTests`.
+  `BugCoffeeTests` and `BugCoffeeMessagesTests`.
 
 ## 2. Platform capabilities a port must request
 

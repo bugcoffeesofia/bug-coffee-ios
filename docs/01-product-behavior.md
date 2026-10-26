@@ -3,7 +3,7 @@
 Every screen, control and state, platform-neutrally. Strings in "quotes" are the exact
 user-visible copy; keep them unless you are localizing (see doc 7 §5).
 
-Reference: `BugWallet/Sources/*View.swift`, `BugWalletWatch/Sources`, `StampWidget/Sources`,
+Reference: `BugCoffee/Sources/*View.swift`, `BugCoffeeWatch/Sources`, `StampWidget/Sources`,
 `MessagesExtension/Sources`.
 
 ---

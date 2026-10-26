@@ -42,8 +42,8 @@ REQUIRED_IMAGES=(icon.png)
 TEMPLATE_IMAGES=(icon.png icon@2x.png icon@3x.png logo.png logo@2x.png)
 
 # ---- CONFIG ------------------------------------------------------------------
-PASS_TYPE_ID="${PASS_TYPE_ID:-pass.com.zerogravityroom.bugwallet}"
-TEAM_ID="${TEAM_ID:-4F5J749858}"
+PASS_TYPE_ID="${PASS_TYPE_ID:-pass.com.bugcoffee.bugcoffee}"
+TEAM_ID="${TEAM_ID:-FM4AWM58J6}"
 ORG_NAME="${ORG_NAME:-Bug Coffee}"
 PASS_CERT="${PASS_CERT:-$SCRIPT_DIR/certs/passcert.pem}"
 PASS_KEY="${PASS_KEY:-$SCRIPT_DIR/certs/passkey.pem}"

@@ -6,7 +6,7 @@ without opening our app, and it surfaces on the lock screen near the shop.
 The in-app QR (doc 1 §3) already covers "show a card to the barista" completely. **The wallet
 pass is a convenience, not the core** — ship it when the core works.
 
-Reference: `BugWallet/Sources/PassBuilder.swift`, `PassSigner.swift`, `PkPassZip.swift`,
+Reference: `BugCoffee/Sources/PassBuilder.swift`, `PassSigner.swift`, `PkPassZip.swift`,
 `Scripts/make_pkpass.sh`, `PassTemplate/`.
 
 ---
@@ -80,7 +80,7 @@ flow, the signer — only into a dedicated build:
   conditions.
 - Only the `Debug-LocalPass` configuration uses that file; `Debug` and `Release` never define
   the flag.
-- The `BugWallet-LocalPass` scheme runs that configuration.
+- The `BugCoffee-LocalPass` scheme runs that configuration.
 
 Result: default builds do not contain the code *or* the key; the feature is a scheme away for
 personal use.

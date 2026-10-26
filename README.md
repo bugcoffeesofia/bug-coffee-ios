@@ -42,12 +42,12 @@ private key (see the security note below), so the default build leaves it out.
 The flag lives in [`Config/LocalPassCreation.xcconfig`](Config/LocalPassCreation.xcconfig)
 and is wired up via `project.yml`:
 
-- **Configuration** `Debug-LocalPass` (BugWallet target) uses that `.xcconfig`,
+- **Configuration** `Debug-LocalPass` (BugCoffee target) uses that `.xcconfig`,
   which appends `LOCAL_PASS_CREATION` to `SWIFT_ACTIVE_COMPILATION_CONDITIONS`.
-- **Scheme** `BugWallet-LocalPass` runs that configuration.
+- **Scheme** `BugCoffee-LocalPass` runs that configuration.
 
-So the scheme controls the feature: run/build **`BugWallet`** and none of the
-pass-creation code is in the binary; run/build **`BugWallet-LocalPass`** and it
+So the scheme controls the feature: run/build **`BugCoffee`** and none of the
+pass-creation code is in the binary; run/build **`BugCoffee-LocalPass`** and it
 all lights up. The everyday `Debug`/`Release` configs never define the flag.
 
 The camera scanner needs `NSCameraUsageDescription` (already in `Info.plist`) and
@@ -57,7 +57,7 @@ message there.
 ### Signing assets (required)
 
 On-device signing needs your Apple **Pass Type ID** certificate + key, placed in
-`BugWallet/Resources/Signing/` as `passcert.pem`, `passkey.pem` (unencrypted
+`BugCoffee/Resources/Signing/` as `passcert.pem`, `passkey.pem` (unencrypted
 PKCS#8), and `wwdr.pem` (Apple WWDR G4). These are gitignored.
 
 > **Security:** this embeds your pass-signing private key in the app bundle. Fine
@@ -75,8 +75,8 @@ from `project.yml`:
 
 ```sh
 brew install xcodegen        # if needed
-xcodegen generate            # writes BugWallet.xcodeproj
-open BugWallet.xcodeproj
+xcodegen generate            # writes BugCoffee.xcodeproj
+open BugCoffee.xcodeproj
 ```
 
 Then set your signing **Team** in Xcode (Signing & Capabilities) and run on a
@@ -93,7 +93,7 @@ unsigned passes, and on-device signing isn't in the iOS SDK.
    Type ID, e.g. `pass.com.yourname.bugcoffee`.
 2. Create/download its certificate, import into Keychain, then export as a `.p12`.
 3. Note your 10-character **Team ID**.
-4. Put those values into `PassConfig` (`BugWallet/Sources/PassBuilder.swift`) and
+4. Put those values into `PassConfig` (`BugCoffee/Sources/PassBuilder.swift`) and
    the `CONFIG` block of `Scripts/make_pkpass.sh` so they match the certificate.
 5. Produce the PEMs the script expects (defaults under `Scripts/certs/`):
 
@@ -117,7 +117,7 @@ openssl x509 -inform DER -in AppleWWDRCAG3.cer -out certs/wwdr.pem
 
 This writes `BugCoffee.pkpass`. AirDrop or email it to your iPhone and tap to add
 it to Wallet. To wire the in-app **Add to Apple Wallet** button, copy that file to
-`BugWallet/Resources/BugCoffee.pkpass` and rebuild.
+`BugCoffee/Resources/BugCoffee.pkpass` and rebuild.
 
 > Don't know your UID? Sign in inside the app — it's shown at the bottom of the
 > card and is copy-selectable.
@@ -126,14 +126,14 @@ it to Wallet. To wire the in-app **Add to Apple Wallet** button, copy that file 
 
 ```
 project.yml                     XcodeGen spec
-BugWallet/Sources/
-  BugWalletApp.swift            app entry + Session
+BugCoffee/Sources/
+  BugCoffeeApp.swift            app entry + Session
   FirebaseAuth.swift            REST email/password sign-in → UID
   QRGenerator.swift             Core Image QR (level H)
   PassBuilder.swift             pass.json + unsigned bundle; PassConfig
   Zip.swift                     folder → zip (system file coordinator)
   LoginView.swift / CardView.swift   UI
-BugWallet/Resources/            Info.plist, Assets.xcassets
+BugCoffee/Resources/            Info.plist, Assets.xcassets
 MessagesExtension/Sources/      iMessage app (group coffee orders)
   MessagesViewController.swift  MSMessagesAppViewController + SwiftUI host
   GroupOrder.swift              menu + order model, encoded in the message URL
@@ -145,7 +145,7 @@ Scripts/make_pkpass.sh          signs a .pkpass with openssl
 
 ## iMessage app — group orders
 
-The `BugWalletMessages` extension adds Bug Coffee to the iMessage app drawer.
+The `BugCoffeeMessages` extension adds Bug Coffee to the iMessage app drawer.
 One person starts a **coffee run**, picks their drinks, and sends it to the
 chat; everyone else taps the bubble, adds their drinks, and sends the update
 back. The whole order travels inside the message itself (`MSSession` + URL

@@ -21,7 +21,7 @@ enum SharedKeys {
     // iMessage extension — the stamp count lives there so the home-screen
     // widget can read it, and the favorite products so the iMessage menu can
     // put them on top.
-    static let appGroup = "group.com.zerogravityroom.bugwallet"
+    static let appGroup = "group.com.bugcoffee.bugcoffee"
     static let defaultsStamps = "bug-coffee.stamps"
     static let defaultsFavorites = "bug-coffee.favorites"
     static let defaultsBlendJournal = "bug-coffee.blend-journal"

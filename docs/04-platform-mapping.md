@@ -9,10 +9,10 @@ requirement; the API is negotiable.
 
 | iOS component | Type | Purpose | Android | Other targets |
 |---------------|------|---------|---------|---------------|
-| **BugWallet** | app | Login, card, products, stamps, health log | app | the whole product |
-| **BugWalletStampWidget** | WidgetKit extension | Stamp card at a glance | App Widget (Jetpack Glance / RemoteViews) | web: none (or a PWA badge); desktop: tray/menu-bar item |
-| **BugWalletWatch** | watchOS app | QR, stamps, caffeine log, blend quiz | Wear OS app | — |
-| **BugWalletMessages** | iMessage extension | Group order inside a chat | share-sheet deep link (no equivalent exists) | web: a shareable URL |
+| **BugCoffee** | app | Login, card, products, stamps, health log | app | the whole product |
+| **BugCoffeeStampWidget** | WidgetKit extension | Stamp card at a glance | App Widget (Jetpack Glance / RemoteViews) | web: none (or a PWA badge); desktop: tray/menu-bar item |
+| **BugCoffeeWatch** | watchOS app | QR, stamps, caffeine log, blend quiz | Wear OS app | — |
+| **BugCoffeeMessages** | iMessage extension | Group order inside a chat | share-sheet deep link (no equivalent exists) | web: a shareable URL |
 | **Apple Wallet pass** | signed `.pkpass` | Card in the platform wallet | Google Wallet loyalty object | — (doc 5) |
 | **`make_pkpass.sh`** | shell script | Signs a pass on a Mac | not needed | — |
 

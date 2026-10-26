@@ -5,8 +5,8 @@ state lives, and how the pieces talk to each other. Docs 1–9 describe *what* t
 in platform-neutral terms; this one describes *how the iOS implementation is structured*, for
 someone about to change it.
 
-Reference: `project.yml` (the source of truth for targets), `BugWallet/Sources`, `Shared`,
-`MessagesExtension`, `StampWidget`, `BugWalletWatch`.
+Reference: `project.yml` (the source of truth for targets), `BugCoffee/Sources`, `Shared`,
+`MessagesExtension`, `StampWidget`, `BugCoffeeWatch`.
 
 ---
 
@@ -33,11 +33,11 @@ Reference: `project.yml` (the source of truth for targets), `BugWallet/Sources`,
 
 ```mermaid
 flowchart LR
-    subgraph bundle["BugWallet.app (iOS 16+)"]
-        App["BugWallet<br/>iOS app"]
-        Widget["BugWalletStampWidget<br/>WidgetKit extension"]
-        Msg["BugWalletMessages<br/>iMessage extension"]
-        Watch["BugWalletWatch<br/>watchOS 9+ app"]
+    subgraph bundle["BugCoffee.app (iOS 16+)"]
+        App["BugCoffee<br/>iOS app"]
+        Widget["BugCoffeeStampWidget<br/>WidgetKit extension"]
+        Msg["BugCoffeeMessages<br/>iMessage extension"]
+        Watch["BugCoffeeWatch<br/>watchOS 9+ app"]
     end
 
     Group[("App Group<br/>UserDefaults")]
@@ -56,13 +56,13 @@ flowchart LR
 
 | Target | Type | Compiles | Entitlements | Notes |
 |--------|------|----------|--------------|-------|
-| `BugWallet` | iOS app | `BugWallet/Sources`, all of `Shared`, `PassTemplate` images as resources | App Group, HealthKit | Embeds the three targets below. Links `X509` and `_CryptoExtras`. |
-| `BugWalletStampWidget` | app extension | `StampWidget/Sources`, all of `Shared` | App Group | Only uses `StampStore`, `StampCardView`, `BugBrand`. |
-| `BugWalletMessages` | iMessage extension | `MessagesExtension/Sources`, all of `Shared` | *(none wired — see §10)* | Reuses the menu, favorites, diary and `BlendFinderView`. |
-| `BugWalletWatch` | watchOS app | `BugWalletWatch/Sources`, **five** `Shared` files, plus `BugWallet/Sources/HealthLogger.swift` | HealthKit | Explicit file list: some shared SwiftUI doesn't build on watchOS. |
-| `BugWalletTests` | unit tests | `BugWalletTests` | — | Hosted in `BugWallet`, `@testable import`. |
-| `BugWalletMessagesTests` | unit tests | its own tests + the extension's three model files + two `Shared` files | — | No host: an extension can't host tests. |
-| `BugWalletUITests`, `BugWalletWatchUITests` | UI tests | screenshot tests | — | Write `docs/screenshots/` (doc 9). |
+| `BugCoffee` | iOS app | `BugCoffee/Sources`, all of `Shared`, `PassTemplate` images as resources | App Group, HealthKit | Embeds the three targets below. Links `X509` and `_CryptoExtras`. |
+| `BugCoffeeStampWidget` | app extension | `StampWidget/Sources`, all of `Shared` | App Group | Only uses `StampStore`, `StampCardView`, `BugBrand`. |
+| `BugCoffeeMessages` | iMessage extension | `MessagesExtension/Sources`, all of `Shared` | *(none wired — see §10)* | Reuses the menu, favorites, diary and `BlendFinderView`. |
+| `BugCoffeeWatch` | watchOS app | `BugCoffeeWatch/Sources`, **five** `Shared` files, plus `BugCoffee/Sources/HealthLogger.swift` | HealthKit | Explicit file list: some shared SwiftUI doesn't build on watchOS. |
+| `BugCoffeeTests` | unit tests | `BugCoffeeTests` | — | Hosted in `BugCoffee`, `@testable import`. |
+| `BugCoffeeMessagesTests` | unit tests | its own tests + the extension's three model files + two `Shared` files | — | No host: an extension can't host tests. |
+| `BugCoffeeUITests`, `BugCoffeeWatchUITests` | UI tests | screenshot tests | — | Write `docs/screenshots/` (doc 9). |
 
 The `.xcodeproj` and the `.entitlements` files are **generated** by XcodeGen from
 `project.yml`. Add files by dropping them in a source folder and regenerating; add
@@ -98,7 +98,7 @@ View (SwiftUI struct)
 
 | Layer | Types | File |
 |-------|-------|------|
-| Entry + routing | `BugWalletApp`, `Session`, `RootView` | `BugWalletApp.swift` |
+| Entry + routing | `BugCoffeeApp`, `Session`, `RootView` | `BugCoffeeApp.swift` |
 | Screens | `LoginView`, `CardView`, `ProductsView`, `BeanDetailView`, `TastingEditor` | `LoginView.swift`, `CardView.swift`, `ProductsView.swift` |
 | Screen models | `LoginModel`, `CardModel`, `DiaryModel` | same files as their views |
 | Layout helpers | `FittingScrollView`, reserved-region modifiers | `AdaptiveLayout.swift` |
@@ -245,7 +245,7 @@ links already sent.
 
 | Gate | Where it's set | What it controls |
 |------|----------------|------------------|
-| `#if LOCAL_PASS_CREATION` | `Config/LocalPassCreation.xcconfig`, applied only to `Debug-LocalPass` (scheme `BugWallet-LocalPass`) | On-device pass signing, "Add to Apple Wallet", the QR scan-and-share flow. Compiled out of `Debug` and `Release`. |
+| `#if LOCAL_PASS_CREATION` | `Config/LocalPassCreation.xcconfig`, applied only to `Debug-LocalPass` (scheme `BugCoffee-LocalPass`) | On-device pass signing, "Add to Apple Wallet", the QR scan-and-share flow. Compiled out of `Debug` and `Release`. |
 | `#if compiler(>=6.4)` | Xcode version | iOS 27 SDK APIs (toolbar priorities and pinned placement in `ProductsView`). |
 | `#if canImport(SwiftUI, _version: 8.0.85)` | SDK version | iOS 27.1 SDK APIs: `ArrangementView`, reserved regions for the fold and camera. |
 | `#if canImport(WidgetKit)` | platform | Guards the widget reload in `StampStore`, which is compiled into every target. |
@@ -293,7 +293,7 @@ parallel.
 |-----------------|-----------|
 | A menu item, bean profile, price rule | `Shared/CoffeeMenu.swift`, `Shared/BlendData.swift` — and never reuse or change an id |
 | A persisted value | a key in `SharedKeys`, plus a small store enum next to its data; App Group only if another target reads it |
-| A screen | a view + `@MainActor` model in `BugWallet/Sources`, routed from `RootView` |
+| A screen | a view + `@MainActor` model in `BugCoffee/Sources`, routed from `RootView` |
 | Something the watch also needs | a UI-light file in `Shared/`, **and** list it under the watch target in `project.yml` |
 | A capability or entitlement | `project.yml`, then `xcodegen generate` |
 | A newer-SDK API | behind both a compile-time gate and `#available` (§7) |
@@ -306,7 +306,7 @@ Things the structure currently gets wrong or leaves open — worth knowing befor
 
 - **The iMessage extension's App Group entitlement is not wired.**
   `MessagesExtension/MessagesExtension.entitlements` declares the group, but `project.yml` has
-  no `entitlements:` block for `BugWalletMessages`, so the generated project sets no
+  no `entitlements:` block for `BugCoffeeMessages`, so the generated project sets no
   `CODE_SIGN_ENTITLEMENTS` for it. Favorites and diary ratings are meant to be shared with the
   extension through the group; confirm on a device that they actually are.
 - **The watch quiz is not personalized.** `BlendMatcher` reads `BlendJournal`, which on the

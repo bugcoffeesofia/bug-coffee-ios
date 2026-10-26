@@ -4,7 +4,7 @@ There is **no Bug Coffee server of our own**. The backend is the shop's existing
 Firebase** project, the same one the shop's web app uses. Everything else the app knows is
 either derived from the signed-in identity or stored on the device.
 
-Reference: `BugWallet/Sources/FirebaseAuth.swift`, `BugWalletApp.swift`,
+Reference: `BugCoffee/Sources/FirebaseAuth.swift`, `BugCoffeeApp.swift`,
 `StampWebSync.swift`.
 
 ---

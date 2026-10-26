@@ -1,7 +1,7 @@
 # 9 — Screenshots
 
 The reference app's main screens, as a port should look and behave. The images are generated,
-not hand-made: `BugWalletUITests/ScreenshotTests.swift` walks the app and writes them to
+not hand-made: `BugCoffeeUITests/ScreenshotTests.swift` walks the app and writes them to
 [`screenshots/<device>/`](screenshots/). Regenerate them after any UI change (§ Regenerating).
 
 The app on two devices: **iPhone 17 Pro** (portrait only, like the app) and **iPad mini (A17 Pro)** in
@@ -86,9 +86,9 @@ The script runs three passes, one after the other:
 
 | Pass | Tests | Simulator | Output |
 |------|-------|-----------|--------|
-| `app` | `BugWalletUITests/ScreenshotTests` (`BugWallet` scheme) | **iPhone 17 Pro** + **iPad mini (A17 Pro)**, in parallel | `iphone-17-pro/01…06`, `ipad-mini-a17-pro/` |
-| `watch` | `BugWalletWatchUITests` (`BugWalletWatch` scheme) | **Apple Watch Series 11 (46mm)** | `apple-watch-series-11-46mm/` |
-| `widgets` | `BugWalletUITests/WidgetScreenshotTests` | a **temporary** iPhone 17 Pro, deleted afterwards | `iphone-17-pro/07…10` |
+| `app` | `BugCoffeeUITests/ScreenshotTests` (`BugCoffee` scheme) | **iPhone 17 Pro** + **iPad mini (A17 Pro)**, in parallel | `iphone-17-pro/01…06`, `ipad-mini-a17-pro/` |
+| `watch` | `BugCoffeeWatchUITests` (`BugCoffeeWatch` scheme) | **Apple Watch Series 11 (46mm)** | `apple-watch-series-11-46mm/` |
+| `widgets` | `BugCoffeeUITests/WidgetScreenshotTests` | a **temporary** iPhone 17 Pro, deleted afterwards | `iphone-17-pro/07…10` |
 
 Simulators are picked on the runtimes that match the active Xcode's iOS and watchOS SDKs. iOS status
 bars are pinned to 9:41 on a fixed date with full battery; watchOS has no status bar override, so
@@ -106,8 +106,8 @@ variants of every screen. Options (environment variables):
 | `DEVELOPER_DIR` | `xcode-select`'s Xcode | e.g. `/Applications/Xcode-RC.app/Contents/Developer` for iOS 27 |
 
 Each PNG is also attached to the test result (Xcode's Report navigator), so a run from Xcode
-works too: ⌘U on the `BugWallet` scheme for the app screens (the widget test skips itself there),
-⌘U on `BugWalletWatch` for the watch. Either writes to the folder of whichever simulator you picked.
+works too: ⌘U on the `BugCoffee` scheme for the app screens (the widget test skips itself there),
+⌘U on `BugCoffeeWatch` for the watch. Either writes to the folder of whichever simulator you picked.
 
 How the tests stay deterministic and harmless:
 
@@ -129,4 +129,4 @@ How the tests stay deterministic and harmless:
 
 To add a screen: add a `testNN…` method that navigates there and calls `snapshot("NN-name")`,
 then add the image to the tables above (both devices). For the watch, the same in
-`BugWalletWatchUITests/WatchScreenshotTests.swift` with `capture("NN-name")`.
+`BugCoffeeWatchUITests/WatchScreenshotTests.swift` with `capture("NN-name")`.

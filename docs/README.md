@@ -9,8 +9,8 @@ mechanism has no direct counterpart, the document names the equivalent capabilit
 changes.
 
 The iOS app in this repository is the **reference implementation**: when this documentation
-and the code disagree, the code (`BugWallet/Sources`, `Shared`, `MessagesExtension`,
-`StampWidget`, `BugWalletWatch`) is the source of truth. Every claim below has a file
+and the code disagree, the code (`BugCoffee/Sources`, `Shared`, `MessagesExtension`,
+`StampWidget`, `BugCoffeeWatch`) is the source of truth. Every claim below has a file
 reference so you can check it.
 
 ## The documents

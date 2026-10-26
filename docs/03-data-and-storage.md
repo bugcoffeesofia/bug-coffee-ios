@@ -134,7 +134,7 @@ same diary the bean pages write (§4).
 Two scopes in the reference app:
 
 - **App-private** — session identity, and the watch's copy of the card.
-- **Shared** (an App Group, suite `group.com.zerogravityroom.bugwallet`) — everything a widget,
+- **Shared** (an App Group, suite `group.com.bugcoffee.bugcoffee`) — everything a widget,
   watch or share-sheet surface has to read.
 
 | Key | Type | Meaning | Scope | Written by | Read by |
@@ -268,8 +268,8 @@ Things other systems (links, stores, wallets) depend on. Changing one is a break
 | Identifier | Value | Used by |
 |------------|-------|---------|
 | Deep-link scheme + host | `bugcoffee://bean/<beanId>` | Bean pages, share sheet |
-| Shared store suite | `group.com.zerogravityroom.bugwallet` | App, widget, watch, group order |
+| Shared store suite | `group.com.bugcoffee.bugcoffee` | App, widget, watch, group order |
 | Widget kind | `BugCoffeeStampCard` | Widget registry |
 | Group-order link | `https://bugcoffee.example/group-order?v=3&o=…` | doc 6 (placeholder host — pick a real one you control) |
-| Pass type id | `pass.com.zerogravityroom.bugwallet` | doc 5 (Apple-specific) |
+| Pass type id | `pass.com.bugcoffee.bugcoffee` | doc 5 (Apple-specific) |
 | Menu item ids | table §1.1/§1.2 | Group-order link, deep links, favorites, diary keys |

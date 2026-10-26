@@ -6,11 +6,11 @@
 // the device: the "Add to Apple Wallet" button, the scan-a-QR-and-share flow, and
 // the PassSigner that reads the bundled Pass Type ID private key. It is OFF in the
 // default Debug/Release configs on purpose — such a build embeds that private key
-// (see BugWallet/Sources/PassSigner.swift and the README security note) and must
+// (see BugCoffee/Sources/PassSigner.swift and the README security note) and must
 // not be distributed.
 //
 // Wiring: this file is the base configuration for the `Debug-LocalPass` build
-// configuration of the BugWallet target, and the `BugWallet-LocalPass` scheme
+// configuration of the BugCoffee target, and the `BugCoffee-LocalPass` scheme
 // runs that configuration. See project.yml.
 
 // Human-readable marker (handy in build logs / Info if ever surfaced).

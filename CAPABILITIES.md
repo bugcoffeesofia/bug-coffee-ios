@@ -66,14 +66,14 @@ is no Android equivalent of an iMessage extension — see §7).
 
 | iOS component | Type | Purpose | Android equivalent |
 |---------------|------|---------|--------------------|
-| **BugWallet** | Main app | Login, loyalty card, products, stamps, health log | Main app |
-| **BugWalletStampWidget** | Home-screen widget | Stamp card at a glance | App Widget (Glance/RemoteViews) |
-| **BugWalletWatch** | watchOS app | Loyalty QR on the wrist | Wear OS app |
-| **BugWalletMessages** | iMessage extension | Group coffee order in a chat | Share-based flow / deep link (§7) |
+| **BugCoffee** | Main app | Login, loyalty card, products, stamps, health log | Main app |
+| **BugCoffeeStampWidget** | Home-screen widget | Stamp card at a glance | App Widget (Glance/RemoteViews) |
+| **BugCoffeeWatch** | watchOS app | Loyalty QR on the wrist | Wear OS app |
+| **BugCoffeeMessages** | iMessage extension | Group coffee order in a chat | Share-based flow / deep link (§7) |
 | **Apple Wallet pass** | `.pkpass` | Loyalty card in Apple Wallet | Google Wallet loyalty object (§6) |
 
 Data is shared between the main app and its extensions through an **App Group**
-(shared key-value store, suite `group.com.zerogravityroom.bugwallet`). On Android,
+(shared key-value store, suite `group.com.bugcoffee.bugcoffee`). On Android,
 back this with a shared store your widget/wear code can read (e.g. DataStore in a
 shared module, or a ContentProvider for cross-process widget access).
 
@@ -465,7 +465,7 @@ write the mg value with a timestamp. Same six drinks and mg values (§9.3).
 ## 13. Shared storage keys (reference)
 
 All cross-component state lives in the app-group store
-`group.com.zerogravityroom.bugwallet` (except UID/email/QR which are also in
+`group.com.bugcoffee.bugcoffee` (except UID/email/QR which are also in
 standard local storage for session restore and watch persistence):
 
 | Key | Type | Meaning | Shared with |

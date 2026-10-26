@@ -1,5 +1,5 @@
 #!/bin/bash
-# Runs the Swift Testing unit tests (BugWalletTests + BugWalletMessagesTests)
+# Runs the Swift Testing unit tests (BugCoffeeTests + BugCoffeeMessagesTests)
 # with code coverage, prints per-target coverage, and fails when a target drops
 # below MIN_COVERAGE percent.
 #
@@ -17,7 +17,7 @@ cd "$(dirname "$0")/.."
 
 DEVICE="${DEVICE:-iPhone 17}"
 MIN_COVERAGE="${MIN_COVERAGE:-95}"
-RESULT="${RESULT:-$(mktemp -d)/BugWalletTests.xcresult}"
+RESULT="${RESULT:-$(mktemp -d)/BugCoffeeTests.xcresult}"
 
 SDK_VERSION="$(xcrun --sdk iphonesimulator --show-sdk-version)"      # e.g. 26.5
 RUNTIME="com.apple.CoreSimulator.SimRuntime.iOS-${SDK_VERSION//./-}"
@@ -33,10 +33,10 @@ echo "▶ $DEVICE, iOS $SDK_VERSION ($UDID)"
 command -v xcodegen >/dev/null && xcodegen generate --quiet
 
 xcodebuild test \
-  -project BugWallet.xcodeproj \
-  -scheme BugWallet \
-  -only-testing:BugWalletTests \
-  -only-testing:BugWalletMessagesTests \
+  -project BugCoffee.xcodeproj \
+  -scheme BugCoffee \
+  -only-testing:BugCoffeeTests \
+  -only-testing:BugCoffeeMessagesTests \
   -destination "id=$UDID" \
   -resultBundlePath "$RESULT" \
   -quiet
